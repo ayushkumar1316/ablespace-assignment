@@ -7,9 +7,11 @@ import { TaskCard } from "./task-card";
 export function KanbanBoard({
   tasks,
   fields,
+  onSelect,
 }: {
   tasks: Task[];
   fields: VisibleFields;
+  onSelect: (taskId: string) => void;
 }) {
   return (
     <div className="flex gap-4 h-full overflow-x-auto pb-2">
@@ -26,7 +28,12 @@ export function KanbanBoard({
             </div>
             <div className="flex-1 px-2 pb-2 space-y-2 overflow-y-auto">
               {columnTasks.map((task) => (
-                <TaskCard key={task.id} task={task} fields={fields} />
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  fields={fields}
+                  onSelect={() => onSelect(task.id)}
+                />
               ))}
             </div>
           </div>

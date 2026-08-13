@@ -1,34 +1,11 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { AVATAR_COLORS, PRIORITY_CONFIG, STATUSES, formatDate } from "../data/tasks";
+import { STATUSES, formatDate } from "../data/tasks";
 import type { Task, VisibleFields } from "../data/tasks";
-
-function avatarColor(seed: string): string {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i += 1) {
-    hash = (hash * 31 + seed.charCodeAt(i)) % AVATAR_COLORS.length;
-  }
-  return AVATAR_COLORS[hash];
-}
-
-function DragHandle() {
-  return (
-    <svg
-      className="w-4 h-4 text-gray-300 cursor-grab"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <circle cx="9" cy="6" r="1.6" />
-      <circle cx="15" cy="6" r="1.6" />
-      <circle cx="9" cy="12" r="1.6" />
-      <circle cx="15" cy="12" r="1.6" />
-      <circle cx="9" cy="18" r="1.6" />
-      <circle cx="15" cy="18" r="1.6" />
-    </svg>
-  );
-}
+import { Avatar } from "./avatar";
+import { DragHandle } from "./drag-handle";
+import { PriorityBadge } from "./priority-badge";
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
   return (
@@ -47,9 +24,11 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
 export function TaskList({
   tasks,
   fields,
+  onSelect,
 }: {
   tasks: Task[];
   fields: VisibleFields;
+  onSelect: (taskId: string) => void;
 }) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
@@ -116,7 +95,16 @@ export function TaskList({
                     sectionTasks.map((task) => (
                       <tr
                         key={task.id}
-                        className="border-t border-gray-100 hover:bg-gray-50 transition-colors"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => onSelect(task.id)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            onSelect(task.id);
+                          }
+                        }}
+                        className="border-t border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
                       >
                         <td className="px-3 py-2.5">
                           <DragHandle />
@@ -127,14 +115,7 @@ export function TaskList({
                         </td>
                         {fields.priority && (
                           <td className="px-3 py-2.5">
-                            <span
-                              className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium whitespace-nowrap ${PRIORITY_CONFIG[task.priority].badgeClass}`}
-                            >
-                              <span
-                                className={`w-1.5 h-1.5 rounded-full ${PRIORITY_CONFIG[task.priority].dotClass}`}
-                              />
-                              {PRIORITY_CONFIG[task.priority].label}
-                            </span>
+                            <PriorityBadge priority={task.priority} />
                           </td>
                         )}
                         {fields.tags && (
@@ -159,11 +140,11 @@ export function TaskList({
                         {fields.assignee && (
                           <td className="px-3 py-2.5">
                             <div className="flex items-center gap-2">
-                              <span
-                                className={`w-6 h-6 rounded-full ${avatarColor(task.assignee)} text-white text-[10px] font-semibold flex items-center justify-center`}
-                              >
-                                {task.assigneeInitials}
-                              </span>
+                              <Avatar
+                                name={task.assignee}
+                                initials={task.assigneeInitials}
+                                className="w-6 h-6 text-[10px]"
+                              />
                               <span className="text-sm text-gray-600 whitespace-nowrap">
                                 {task.assignee}
                               </span>
