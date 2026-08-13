@@ -49,7 +49,7 @@ export function Login() {
                 strokeWidth={2}
                 d="M12 5v.01M12 12v.01M12 19v.01"
               />
-            />
+            </svg>
           </div>
         )}
       </div>
