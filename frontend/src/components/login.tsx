@@ -9,20 +9,9 @@ export function Login() {
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-lg p-8 flex flex-col items-center gap-6">
         <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">
-          <svg
-            className="w-7 h-7 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 12h.01m-5.286 5.286l7-7m7 7l-7 7m7-7l-7-7m7 7l-7-7"
-            />
-          </svg>
+          <div className="w-7 h-7 bg-gray-300 rounded-text text-gray-500 flex items-center justify-center text-xs font-bold">
+            LM
+          </div>
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900">Task Manager</h2>
@@ -58,7 +47,7 @@ export function Login() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M8 12h.01m-5.286 5.286l7-7m7 7l-7 7m7-7l-7-7m7 7l-7-7"
+                d="M12 5v.01M12 12v.01M12 19v.01"
               />
             />
           </div>
