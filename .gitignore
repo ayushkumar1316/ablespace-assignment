@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+pnpm-lockfile.yarn-lock/
+
+# Next.js
+.next/
+out/
+
+# Database
+*.sqlite
+
+# Environment variables
+.env*
+.local*
+
+# Coverage
+coverage/
+
+# TypeScript Project
+*.tsbuildinfo
+*.tsbuildinfo
+
+# Playwright
+.playwright/
+
+# IDE
+.vscode/
+.vscode/.hidden/
+
+# npm/pnpm/yarn lock files
+yarn.lock
+p-lockfile
+
+# Production
+.DS_Store
+npm-debug.log
+yarn-debug.log
+
+# NestJS
+dist/
+*.local
