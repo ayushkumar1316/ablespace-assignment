@@ -30,7 +30,7 @@
 
 ## Phase 6 — Missing-Design Decisions
 - [x] 6.1 — Add Task UI
-- [ ] 6.2 — Add Project UI
+- [x] 6.2 — Add Project UI
 - [ ] 6.3 — Dark Mode
 - [ ] 6.4 — Color Mode behavior
 - [ ] 6.5 — Responsive strategy

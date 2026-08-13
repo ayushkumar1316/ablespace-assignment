@@ -7,10 +7,12 @@ import {
   PROJECTS,
 } from "../data/projects";
 import type {
+  Project,
   ProjectFieldKey,
   ProjectVisibleFields,
 } from "../data/projects";
 import { TASKS, formatDate } from "../data/tasks";
+import { AddProjectModal } from "./add-project-modal";
 import { Avatar } from "./avatar";
 import { DisplayMenu } from "./display-menu";
 import { ProjectDetail } from "./project-detail";
@@ -39,6 +41,7 @@ const FIELD_OPTIONS: { key: ProjectFieldKey; label: string }[] = [
 ];
 
 export function ProjectsWorkspace() {
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
@@ -47,27 +50,33 @@ export function ProjectsWorkspace() {
   const [fields, setFields] = useState<ProjectVisibleFields>(
     DEFAULT_PROJECT_VISIBLE_FIELDS
   );
+  const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
 
   const setField = (key: ProjectFieldKey, value: boolean) => {
     setFields((prev) => ({ ...prev, [key]: value }));
   };
 
   const selectedTask = TASKS.find((task) => task.id === selectedTaskId);
-  const selectedProject = PROJECTS.find(
+  const selectedProject = projects.find(
     (project) => project.id === selectedProjectId
   );
 
   const filteredProjects = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
-      return PROJECTS;
+      return projects;
     }
-    return PROJECTS.filter((project) =>
+    return projects.filter((project) =>
       [project.name, project.description, ...project.tags].some((value) =>
         value.toLowerCase().includes(query)
       )
     );
-  }, [searchQuery]);
+  }, [searchQuery, projects]);
+
+  const handleCreateProject = (project: Project) => {
+    setProjects((prev) => [...prev, project]);
+    setIsAddProjectOpen(false);
+  };
 
   if (selectedTask) {
     return (
@@ -116,6 +125,7 @@ export function ProjectsWorkspace() {
         <div className="flex items-center gap-2 ml-auto">
           <button
             type="button"
+            onClick={() => setIsAddProjectOpen(true)}
             className="rounded-md px-3 py-1.5 text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 transition-colors"
           >
             Add Project
@@ -238,6 +248,13 @@ export function ProjectsWorkspace() {
           </p>
         )}
       </div>
+
+      {isAddProjectOpen && (
+        <AddProjectModal
+          onClose={() => setIsAddProjectOpen(false)}
+          onCreate={handleCreateProject}
+        />
+      )}
     </div>
   );
 }
