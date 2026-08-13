@@ -209,7 +209,7 @@ export function DatePicker({
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute left-0 right-0 top-full z-20 mt-1.5 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+          <div className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
             <Calendar
               startDate={startDate}
               endDate={endDate}

@@ -67,9 +67,11 @@ function MetaCard({
 export function TaskDetail({
   task,
   onBack,
+  backLabel = "All tasks",
 }: {
   task: Task;
   onBack: () => void;
+  backLabel?: string;
 }) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
@@ -118,7 +120,7 @@ export function TaskDetail({
         className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
       >
         <BackIcon />
-        All tasks
+        {backLabel}
       </button>
 
       <div className="flex flex-col lg:flex-row gap-8">

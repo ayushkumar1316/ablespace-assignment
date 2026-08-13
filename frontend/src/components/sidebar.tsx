@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
+import { SelectMenu } from "./select-menu";
+import type { SelectOption } from "./select-menu";
+import { COLOR_MODE_OPTIONS, THEME_OPTIONS } from "../data/preferences";
+import type { ColorMode, Section, ThemeMode } from "../data/preferences";
 
 function WorkspaceIcon() {
   return (
@@ -58,16 +63,40 @@ function SettingsIcon() {
   );
 }
 
+const THEME_MENU_OPTIONS: SelectOption[] = THEME_OPTIONS.map((option) => ({
+  value: option.value,
+  label: option.label,
+}));
+
+const COLOR_MENU_OPTIONS: SelectOption[] = COLOR_MODE_OPTIONS.map((option) => ({
+  value: option.value,
+  label: option.label,
+}));
+
+const COLOR_SWATCH: Record<ColorMode, string> = Object.fromEntries(
+  COLOR_MODE_OPTIONS.map((option) => [option.value, option.swatchClass])
+) as Record<ColorMode, string>;
+
+const NAV_ITEMS: { key: Section; label: string; icon: ReactNode }[] = [
+  { key: "tasks", label: "Tasks", icon: <WorkspaceIcon /> },
+  { key: "projects", label: "Projects", icon: <ProjectsIcon /> },
+  { key: "settings", label: "Settings", icon: <SettingsIcon /> },
+];
+
 export function Sidebar({
+  section,
+  onNavigate,
+  theme,
   onThemeChange,
+  colorMode,
   onColorChange,
-  onSettingsClick,
 }: {
-  onThemeChange?: (theme: "light" | "dark") => void;
-  onColorChange?: (
-    color: "amber" | "blue" | "pink" | "rose" | "emerald" | "black"
-  ) => void;
-  onSettingsClick?: () => void;
+  section: Section;
+  onNavigate: (section: Section) => void;
+  theme: ThemeMode;
+  onThemeChange: (theme: ThemeMode) => void;
+  colorMode: ColorMode;
+  onColorChange: (color: ColorMode) => void;
 }) {
   const [minimized, setMinimized] = useState(false);
 
@@ -109,27 +138,24 @@ export function Sidebar({
           {minimized ? "•" : "Main"}
         </p>
 
-        <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-gray-100 text-gray-900 font-medium">
-          <WorkspaceIcon />
-          {!minimized && <span className="text-sm">Tasks</span>}
-        </div>
-
-        <button
-          type="button"
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors mt-1"
-        >
-          <ProjectsIcon />
-          {!minimized && <span className="text-sm">Projects</span>}
-        </button>
-
-        <button
-          type="button"
-          onClick={onSettingsClick}
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors mt-1"
-        >
-          <SettingsIcon />
-          {!minimized && <span className="text-sm">Settings</span>}
-        </button>
+        {NAV_ITEMS.map((item, index) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => onNavigate(item.key)}
+            aria-current={section === item.key ? "page" : undefined}
+            className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+              index > 0 ? "mt-1 " : ""
+            }${
+              section === item.key
+                ? "bg-gray-100 text-gray-900 font-medium"
+                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            }`}
+          >
+            {item.icon}
+            {!minimized && <span className="text-sm">{item.label}</span>}
+          </button>
+        ))}
       </nav>
 
       {/* Footer Utilities */}
@@ -138,40 +164,28 @@ export function Sidebar({
           <>
             <div className="flex flex-col gap-1">
               <label className="text-xs text-gray-500">Theme</label>
-              <select
-                onChange={(e) => onThemeChange?.(e.target.value as "light" | "dark")}
-                defaultValue="light"
-                className="block w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              >
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-              </select>
+              <SelectMenu
+                value={theme}
+                options={THEME_MENU_OPTIONS}
+                onChange={(value) => onThemeChange(value as ThemeMode)}
+              />
             </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-xs text-gray-500">Color Mode</label>
-              <select
-                onChange={(e) =>
-                  onColorChange?.(
-                    e.target.value as
-                      | "amber"
-                      | "blue"
-                      | "pink"
-                      | "rose"
-                      | "emerald"
-                      | "black"
-                  )
-                }
-                defaultValue="blue"
-                className="block w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              >
-                <option value="amber">Amber</option>
-                <option value="blue">Blue</option>
-                <option value="pink">Pink</option>
-                <option value="rose">Rose</option>
-                <option value="emerald">Emerald</option>
-                <option value="black">Black</option>
-              </select>
+              <SelectMenu
+                value={colorMode}
+                options={COLOR_MENU_OPTIONS}
+                onChange={(value) => onColorChange(value as ColorMode)}
+                renderOption={(option) => (
+                  <span className="flex items-center gap-2">
+                    <span
+                      className={`w-3 h-3 rounded-full ${COLOR_SWATCH[option.value as ColorMode]}`}
+                    />
+                    <span>{option.label}</span>
+                  </span>
+                )}
+              />
             </div>
           </>
         )}

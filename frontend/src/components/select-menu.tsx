@@ -75,7 +75,7 @@ export function SelectMenu({
           />
           <div
             role="listbox"
-            className="absolute left-0 right-0 top-full z-20 mt-1.5 overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+            className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
           >
             {options.map((option) => {
               const isSelected = option.value === value;
