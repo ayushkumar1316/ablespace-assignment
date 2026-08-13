@@ -2,17 +2,20 @@
 
 import { useMemo, useState } from "react";
 import { DEFAULT_VISIBLE_FIELDS, TASKS } from "../data/tasks";
-import type { FieldKey, VisibleFields } from "../data/tasks";
+import type { FieldKey, Task, VisibleFields } from "../data/tasks";
 import { TopBar } from "./top-bar";
 import { KanbanBoard } from "./kanban-board";
 import { TaskList } from "./task-list";
 import { TaskDetail } from "./task-detail";
+import { AddTaskModal } from "./add-task-modal";
 
 export function TaskWorkspace() {
+  const [tasks, setTasks] = useState<Task[]>(TASKS);
   const [view, setView] = useState<"board" | "list">("board");
   const [searchQuery, setSearchQuery] = useState("");
   const [fields, setFields] = useState<VisibleFields>(DEFAULT_VISIBLE_FIELDS);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
 
   const setField = (key: FieldKey, value: boolean) => {
     setFields((prev) => ({ ...prev, [key]: value }));
@@ -21,16 +24,21 @@ export function TaskWorkspace() {
   const filteredTasks = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
-      return TASKS;
+      return tasks;
     }
-    return TASKS.filter((task) =>
+    return tasks.filter((task) =>
       [task.title, task.description, ...task.tags].some((value) =>
         value.toLowerCase().includes(query)
       )
     );
-  }, [searchQuery]);
+  }, [searchQuery, tasks]);
 
-  const selectedTask = TASKS.find((task) => task.id === selectedTaskId) ?? null;
+  const selectedTask = tasks.find((task) => task.id === selectedTaskId) ?? null;
+
+  const handleCreateTask = (task: Task) => {
+    setTasks((prev) => [...prev, task]);
+    setIsAddTaskOpen(false);
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -52,6 +60,7 @@ export function TaskWorkspace() {
             setSearchQuery={setSearchQuery}
             fields={fields}
             setField={setField}
+            onAddTask={() => setIsAddTaskOpen(true)}
           />
 
           <div className="flex-1 overflow-hidden pt-4">
@@ -70,6 +79,13 @@ export function TaskWorkspace() {
             )}
           </div>
         </>
+      )}
+
+      {isAddTaskOpen && (
+        <AddTaskModal
+          onClose={() => setIsAddTaskOpen(false)}
+          onCreate={handleCreateTask}
+        />
       )}
     </div>
   );

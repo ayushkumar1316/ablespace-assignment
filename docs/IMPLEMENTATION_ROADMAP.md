@@ -29,14 +29,14 @@
 - [x] Remaining verified UI states
 
 ## Phase 6 — Missing-Design Decisions
-- [ ] Add Task UI
-- [ ] Add Project UI
-- [ ] Dark Mode
-- [ ] Color Mode behavior
-- [ ] Responsive strategy
-- [ ] Drag visual states
-- [ ] Empty states
-- [ ] Profile detail level
+- [x] 6.1 — Add Task UI
+- [ ] 6.2 — Add Project UI
+- [ ] 6.3 — Dark Mode
+- [ ] 6.4 — Color Mode behavior
+- [ ] 6.5 — Responsive strategy
+- [ ] 6.6 — Drag visual states
+- [ ] 6.7 — Empty states
+- [ ] 6.8 — Profile detail level
 
 ## Phase 7 — Backend
 - [ ] MongoDB/Mongoose setup
@@ -88,9 +88,9 @@
 
 ## Current Position
 
-**Current phase: Phase 5 — Remaining Verified Figma Screens**
+**Current phase: Phase 6.1 — Add Task UI**
 
 Next milestone:
-**Project views**
+**Phase 6.2 — Add Project UI**
 
 Do not implement or mark future phases complete until their actual work is finished and verified.

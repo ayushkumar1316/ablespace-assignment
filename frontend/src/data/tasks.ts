@@ -451,3 +451,12 @@ export const TASKS: Task[] = [
     ],
   },
 ];
+
+export const MEMBERS: { name: string; initials: string }[] = Array.from(
+  new Map(
+    TASKS.map((task) => [
+      task.assignee,
+      { name: task.assignee, initials: task.assigneeInitials },
+    ])
+  ).values()
+).sort((a, b) => a.name.localeCompare(b.name));

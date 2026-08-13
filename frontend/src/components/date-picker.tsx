@@ -158,14 +158,21 @@ export function DatePicker({
   startDate,
   endDate,
   onChange,
+  single = false,
 }: {
   startDate: string;
   endDate: string;
   onChange: (start: string, end: string) => void;
+  single?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
   const handleDayClick = (iso: string) => {
+    if (single) {
+      onChange(iso, "");
+      setOpen(false);
+      return;
+    }
     if (!startDate || (startDate && endDate)) {
       onChange(iso, "");
       return;
@@ -190,16 +197,18 @@ export function DatePicker({
             {startDate ? formatFullDate(startDate) : "Start date"}
           </span>
         </button>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="relative z-20 flex w-full items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm text-gray-700 hover:border-gray-300"
-        >
-          <CalendarIcon />
-          <span className="flex-1 truncate text-left">
-            {endDate ? formatFullDate(endDate) : "End date"}
-          </span>
-        </button>
+        {!single && (
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="relative z-20 flex w-full items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm text-gray-700 hover:border-gray-300"
+          >
+            <CalendarIcon />
+            <span className="flex-1 truncate text-left">
+              {endDate ? formatFullDate(endDate) : "End date"}
+            </span>
+          </button>
+        )}
       </div>
 
       {open && (

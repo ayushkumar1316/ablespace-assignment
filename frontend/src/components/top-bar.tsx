@@ -60,6 +60,7 @@ export function TopBar({
   setSearchQuery,
   fields,
   setField,
+  onAddTask,
 }: {
   selectedView: "board" | "list";
   setSelectedView: (view: "board" | "list") => void;
@@ -67,6 +68,7 @@ export function TopBar({
   setSearchQuery: (query: string) => void;
   fields: VisibleFields;
   setField: (key: FieldKey, value: boolean) => void;
+  onAddTask: () => void;
 }) {
   return (
     <header className="flex items-center gap-4 border-b border-gray-200 bg-white px-4 py-3 flex-wrap">
@@ -117,6 +119,7 @@ export function TopBar({
       <div className="flex items-center gap-2 ml-auto">
         <button
           type="button"
+          onClick={onAddTask}
           className="rounded-md px-3 py-1.5 text-sm font-medium bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
         >
           Add Task
