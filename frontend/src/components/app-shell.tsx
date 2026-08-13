@@ -3,12 +3,19 @@
 import * as React from "react";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
+import { Login } from "./login";
 
 export function AppShell({
   children,
+  loginMode,
 }: {
   children: ReactNode;
+  loginMode?: boolean;
 }) {
+  if (loginMode) {
+    return <Login />;
+  }
+
   // State for view selection (client-side only)
   const [selectedView, setSelectedView] = React.useState<"board" | "list">("board");
 
