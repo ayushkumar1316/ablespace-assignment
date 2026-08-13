@@ -126,7 +126,7 @@ export function ProjectsWorkspace() {
           <button
             type="button"
             onClick={() => setIsAddProjectOpen(true)}
-            className="rounded-md px-3 py-1.5 text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 transition-colors"
+            className="rounded-md px-3 py-1.5 text-sm font-medium bg-accent text-white hover:bg-accent-strong transition-colors"
           >
             Add Project
           </button>

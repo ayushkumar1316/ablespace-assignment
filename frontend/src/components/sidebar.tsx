@@ -74,7 +74,7 @@ const COLOR_MENU_OPTIONS: SelectOption[] = COLOR_MODE_OPTIONS.map((option) => ({
 }));
 
 const COLOR_SWATCH: Record<ColorMode, string> = Object.fromEntries(
-  COLOR_MODE_OPTIONS.map((option) => [option.value, option.swatchClass])
+  COLOR_MODE_OPTIONS.map((option) => [option.value, option.hex])
 ) as Record<ColorMode, string>;
 
 const NAV_ITEMS: { key: Section; label: string; icon: ReactNode }[] = [
@@ -148,7 +148,7 @@ export function Sidebar({
               index > 0 ? "mt-1 " : ""
             }${
               section === item.key
-                ? "bg-gray-100 text-gray-900 font-medium"
+                ? "bg-accent-soft text-accent-strong font-medium"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
             }`}
           >
@@ -180,7 +180,10 @@ export function Sidebar({
                 renderOption={(option) => (
                   <span className="flex items-center gap-2">
                     <span
-                      className={`w-3 h-3 rounded-full ${COLOR_SWATCH[option.value as ColorMode]}`}
+                      className="w-3 h-3 rounded-full"
+                      style={{
+                        backgroundColor: COLOR_SWATCH[option.value as ColorMode],
+                      }}
                     />
                     <span>{option.label}</span>
                   </span>

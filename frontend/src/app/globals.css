@@ -3,11 +3,41 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: #3b82f6;
+  --accent-strong: color-mix(in srgb, var(--accent) 82%, #000000);
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, #ffffff);
+}
+
+[data-accent="amber"] {
+  --accent: #d97706;
+}
+
+[data-accent="blue"] {
+  --accent: #3b82f6;
+}
+
+[data-accent="pink"] {
+  --accent: #db2777;
+}
+
+[data-accent="rose"] {
+  --accent: #e11d48;
+}
+
+[data-accent="emerald"] {
+  --accent: #059669;
+}
+
+[data-accent="black"] {
+  --accent: #171717;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

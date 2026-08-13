@@ -31,7 +31,7 @@
 ## Phase 6 — Missing-Design Decisions
 - [x] 6.1 — Add Task UI
 - [x] 6.2 — Add Project UI
-- [ ] 6.3 — Dark Mode
+- [x] 6.3 — Accent Color System
 - [ ] 6.4 — Color Mode behavior
 - [ ] 6.5 — Responsive strategy
 - [ ] 6.6 — Drag visual states
@@ -88,9 +88,9 @@
 
 ## Current Position
 
-**Current phase: Phase 6.1 — Add Task UI**
+**Current phase: Phase 6.3 — Accent Color System**
 
 Next milestone:
-**Phase 6.2 — Add Project UI**
+**Phase 6.4 — Color Mode behavior**
 
 Do not implement or mark future phases complete until their actual work is finished and verified.

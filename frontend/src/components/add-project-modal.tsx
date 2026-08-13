@@ -45,7 +45,7 @@ function ChevronDownIcon() {
 function CheckIcon() {
   return (
     <svg
-      className="w-4 h-4 shrink-0 text-gray-600"
+      className="w-4 h-4 shrink-0 text-accent"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -115,7 +115,7 @@ function MemberSelect({
                     checked={isSelected}
                     readOnly
                     aria-hidden="true"
-                    className="pointer-events-none h-4 w-4 accent-gray-900"
+                    className="pointer-events-none h-4 w-4 accent-accent"
                   />
                   <Avatar
                     name={member.name}
@@ -198,7 +198,7 @@ export function AddProjectModal({
     `mt-1 w-full rounded-md border px-3 py-2 text-sm text-gray-700 focus:outline-none ${
       hasError
         ? "border-red-300 focus:border-red-400"
-        : "border-gray-200 focus:border-indigo-400"
+        : "border-gray-200 focus:border-accent"
     }`;
 
   return (
@@ -308,7 +308,7 @@ export function AddProjectModal({
             </button>
             <button
               type="submit"
-              className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
             >
               Create Project
             </button>

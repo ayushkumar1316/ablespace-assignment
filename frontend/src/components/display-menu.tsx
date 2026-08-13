@@ -77,11 +77,11 @@ export function DisplayMenu<K extends string>({
                   type="checkbox"
                   checked={fields[option.key]}
                   onChange={(e) => onChange(option.key, e.target.checked)}
-                  className="w-4 h-4 accent-gray-900"
+                  className="w-4 h-4 accent-accent"
                 />
                 <span className="text-sm text-gray-700">{option.label}</span>
                 {fields[option.key] && (
-                  <span className="ml-auto text-gray-400">
+                  <span className="ml-auto text-accent">
                     <CheckIcon />
                   </span>
                 )}

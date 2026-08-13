@@ -49,7 +49,7 @@ export function ProfileSettings() {
                   id="profile-name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-400 focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
                 />
               </div>
               <div>
@@ -64,7 +64,7 @@ export function ProfileSettings() {
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-400 focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -73,7 +73,7 @@ export function ProfileSettings() {
           <div className="mt-4 flex justify-end">
             <button
               type="button"
-              className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
             >
               Save changes
             </button>

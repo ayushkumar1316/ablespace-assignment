@@ -137,11 +137,11 @@ function Calendar({
               onClick={() => onDayClick(cell)}
               className={`h-8 w-8 rounded-full text-xs flex items-center justify-center transition-colors ${
                 isStart || isEnd
-                  ? "bg-indigo-600 text-white font-semibold"
+                  ? "bg-accent text-white font-semibold"
                   : inRange
-                    ? "bg-indigo-50 text-indigo-700"
+                    ? "bg-accent-soft text-accent-strong"
                     : isToday
-                      ? "ring-1 ring-inset ring-indigo-600 text-gray-900 hover:bg-gray-100"
+                      ? "ring-1 ring-inset ring-accent text-gray-900 hover:bg-gray-100"
                       : "text-gray-700 hover:bg-gray-100"
               }`}
             >

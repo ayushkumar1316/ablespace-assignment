@@ -120,7 +120,7 @@ export function AddTaskModal({
     `mt-1 w-full rounded-md border px-3 py-2 text-sm text-gray-700 focus:outline-none ${
       hasError
         ? "border-red-300 focus:border-red-400"
-        : "border-gray-200 focus:border-indigo-400"
+        : "border-gray-200 focus:border-accent"
     }`;
 
   return (
@@ -275,7 +275,7 @@ export function AddTaskModal({
             </button>
             <button
               type="submit"
-              className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
             >
               Create Task
             </button>

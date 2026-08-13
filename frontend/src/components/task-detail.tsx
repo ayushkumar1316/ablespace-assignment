@@ -141,7 +141,7 @@ export function TaskDetail({
               onChange={(event) => setDescription(event.target.value)}
               rows={4}
               aria-label="Description"
-              className="w-full resize-none rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-indigo-400 focus:outline-none"
+              className="w-full resize-none rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
             />
           </div>
 
@@ -160,7 +160,7 @@ export function TaskDetail({
                       type="checkbox"
                       checked={subtask.done}
                       onChange={() => toggleSubtask(subtask.id)}
-                      className="mt-0.5 h-4 w-4 accent-indigo-600"
+                      className="mt-0.5 h-4 w-4 accent-accent"
                     />
                     <span
                       className={`text-sm ${
@@ -213,7 +213,7 @@ export function TaskDetail({
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Write a comment..."
                 aria-label="Write a comment"
-                className="flex-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-indigo-400 focus:outline-none"
+                className="flex-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
               />
             </form>
           </div>
