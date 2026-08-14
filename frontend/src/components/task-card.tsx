@@ -4,6 +4,7 @@ import { formatDate } from "../data/tasks";
 import type { Task, VisibleFields } from "../data/tasks";
 import { Avatar } from "./avatar";
 import { DragHandle } from "./drag-handle";
+import type { DragHandleHandlers } from "./drag-handle";
 import { PriorityBadge } from "./priority-badge";
 
 function CalendarIcon() {
@@ -32,25 +33,48 @@ export function TaskCard({
   task,
   fields,
   onSelect,
+  isGhost = false,
+  dragging = false,
+  grabbed = false,
+  handleHandlers,
 }: {
   task: Task;
   fields: VisibleFields;
   onSelect: () => void;
+  isGhost?: boolean;
+  dragging?: boolean;
+  grabbed?: boolean;
+  handleHandlers?: DragHandleHandlers;
 }) {
   return (
     <div
-      role="button"
-      tabIndex={0}
-      onClick={onSelect}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onSelect();
-        }
-      }}
-      className="group bg-surface rounded-lg border border-border shadow-sm hover:shadow-md hover:border-border-strong transition-all cursor-pointer p-3 flex gap-2"
+      data-task-id={task.id}
+      role={isGhost ? undefined : "button"}
+      tabIndex={isGhost ? undefined : 0}
+      onClick={isGhost ? undefined : onSelect}
+      onKeyDown={
+        isGhost
+          ? undefined
+          : (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onSelect();
+              }
+            }
+      }
+      className={`group bg-surface rounded-lg border border-border shadow-sm transition-all p-3 flex gap-2 ${
+        isGhost
+          ? "w-72 rotate-2 shadow-2xl ring-2 ring-accent/50 border-accent/40"
+          : dragging
+            ? "opacity-40 ring-2 ring-accent/60 border-accent/50"
+            : "hover:shadow-md hover:border-border-strong cursor-pointer"
+      }`}
     >
-      <DragHandle className="group-hover:text-foreground-faint mt-0.5" />
+      <DragHandle
+        className="group-hover:text-foreground-faint mt-0.5"
+        grabbed={grabbed}
+        handlers={handleHandlers}
+      />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">

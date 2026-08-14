@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DEFAULT_VISIBLE_FIELDS, TASKS } from "../data/tasks";
-import type { FieldKey, Task, VisibleFields } from "../data/tasks";
+import type { FieldKey, Task, TaskStatus, VisibleFields } from "../data/tasks";
 import { TopBar } from "./top-bar";
 import { KanbanBoard } from "./kanban-board";
 import { TaskList } from "./task-list";
@@ -40,6 +40,25 @@ export function TaskWorkspace() {
     setIsAddTaskOpen(false);
   };
 
+  const handleReorderTask = (taskId: string, status: TaskStatus, index: number) => {
+    setTasks((prev) => {
+      const task = prev.find((item) => item.id === taskId);
+      if (!task) {
+        return prev;
+      }
+      const without = prev.filter((item) => item.id !== taskId);
+      const column = without.filter((item) => item.status === status);
+      const clamped = Math.max(0, Math.min(index, column.length));
+      const reordered = [
+        ...column.slice(0, clamped),
+        { ...task, status },
+        ...column.slice(clamped),
+      ];
+      const others = without.filter((item) => item.status !== status);
+      return [...others, ...reordered];
+    });
+  };
+
   return (
     <div className="h-full flex flex-col">
       {selectedTask ? (
@@ -69,6 +88,7 @@ export function TaskWorkspace() {
                 tasks={filteredTasks}
                 fields={fields}
                 onSelect={setSelectedTaskId}
+                onReorder={handleReorderTask}
               />
             ) : (
               <TaskList

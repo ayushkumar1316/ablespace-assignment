@@ -34,7 +34,7 @@
 - [x] 6.3 — Accent Color System
 - [x] 6.4 — Color Mode behavior
 - [x] 6.5 — Responsive strategy
-- [ ] 6.6 — Drag visual states
+- [x] 6.6 — Drag visual states
 - [ ] 6.7 — Empty states
 - [ ] 6.8 — Profile detail level
 
@@ -88,9 +88,9 @@
 
 ## Current Position
 
-**Current phase: Phase 6.5 — Responsive strategy**
+**Current phase: Phase 6.6 — Drag visual states**
 
 Next milestone:
-**Phase 6.6 — Drag visual states**
+**Phase 6.7 — Empty states**
 
 Do not implement or mark future phases complete until their actual work is finished and verified.
