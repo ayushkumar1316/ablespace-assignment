@@ -4,6 +4,7 @@ import { DEFAULT_VISIBLE_FIELDS, TASKS, formatDate } from "../data/tasks";
 import { PROJECT_STATUS_STYLES } from "../data/projects";
 import type { Project } from "../data/projects";
 import { Avatar } from "./avatar";
+import { EmptyState } from "./empty-state";
 import { TaskList } from "./task-list";
 
 function ChevronRightIcon() {
@@ -31,6 +32,21 @@ function CalendarIcon() {
     >
       <rect x="3" y="4" width="18" height="18" rx="2" strokeWidth="2" />
       <path d="M16 2v4M8 2v4M3 10h18" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ClipboardListIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <rect x="5" y="4" width="14" height="17" rx="2" strokeWidth="2" />
+      <path d="M9 9h6M9 13h6M9 17h3" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -115,7 +131,16 @@ export function ProjectDetail({
         <h2 className="mb-3 text-base font-semibold text-foreground">
           Tasks <span className="font-normal text-foreground-faint">{tasks.length}</span>
         </h2>
-        <TaskList tasks={tasks} fields={DEFAULT_VISIBLE_FIELDS} onSelect={onSelectTask} />
+        {tasks.length === 0 ? (
+          <EmptyState
+            icon={<ClipboardListIcon />}
+            title="No tasks yet"
+            description="This project doesn't have any tasks."
+            className="border border-border bg-surface rounded-lg"
+          />
+        ) : (
+          <TaskList tasks={tasks} fields={DEFAULT_VISIBLE_FIELDS} onSelect={onSelectTask} />
+        )}
       </div>
     </div>
   );

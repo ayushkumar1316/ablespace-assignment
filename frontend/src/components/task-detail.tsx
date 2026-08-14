@@ -47,6 +47,25 @@ function BackIcon() {
   );
 }
 
+function MessageSquareIcon() {
+  return (
+    <svg
+      className="w-4 h-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function MetaCard({
   title,
   children,
@@ -152,55 +171,66 @@ export function TaskDetail({
                 {doneCount}/{subtasks.length}
               </span>
             </h3>
-            <ul className="space-y-1">
-              {subtasks.map((subtask) => (
-                <li key={subtask.id}>
-                  <label className="flex cursor-pointer items-start gap-2.5 rounded-md px-2 py-1.5 hover:bg-surface-muted">
-                    <input
-                      type="checkbox"
-                      checked={subtask.done}
-                      onChange={() => toggleSubtask(subtask.id)}
-                      className="mt-0.5 h-4 w-4 accent-accent"
-                    />
-                    <span
-                      className={`text-sm ${
-                        subtask.done
-                          ? "text-foreground-faint line-through"
-                          : "text-foreground-secondary"
-                      }`}
-                    >
-                      {subtask.title}
-                    </span>
-                  </label>
-                </li>
-              ))}
-            </ul>
+            {subtasks.length === 0 ? (
+              <p className="text-sm text-foreground-faint">No subtasks yet.</p>
+            ) : (
+              <ul className="space-y-1">
+                {subtasks.map((subtask) => (
+                  <li key={subtask.id}>
+                    <label className="flex cursor-pointer items-start gap-2.5 rounded-md px-2 py-1.5 hover:bg-surface-muted">
+                      <input
+                        type="checkbox"
+                        checked={subtask.done}
+                        onChange={() => toggleSubtask(subtask.id)}
+                        className="mt-0.5 h-4 w-4 accent-accent"
+                      />
+                      <span
+                        className={`text-sm ${
+                          subtask.done
+                            ? "text-foreground-faint line-through"
+                            : "text-foreground-secondary"
+                        }`}
+                      >
+                        {subtask.title}
+                      </span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div>
             <h3 className="mb-3 text-sm font-semibold text-foreground">
               Activity
             </h3>
-            <ul className="space-y-4">
-              {activity.map((item) => (
-                <li key={item.id} className="flex gap-3">
-                  <Avatar
-                    name={item.author}
-                    initials={item.authorInitials}
-                    className="w-8 h-8 text-xs"
-                  />
-                  <div className="min-w-0">
-                    <p className="text-sm text-foreground">
-                      <span className="font-medium">{item.author}</span>{" "}
-                      <span className="text-foreground-subtle">{item.text}</span>
-                    </p>
-                    <p className="mt-0.5 text-xs text-foreground-faint">
-                      {formatActivityTime(item.createdAt)}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {activity.length === 0 ? (
+              <div className="flex items-center gap-2 text-sm text-foreground-faint">
+                <MessageSquareIcon />
+                <span>No activity yet. Comments and updates will appear here.</span>
+              </div>
+            ) : (
+              <ul className="space-y-4">
+                {activity.map((item) => (
+                  <li key={item.id} className="flex gap-3">
+                    <Avatar
+                      name={item.author}
+                      initials={item.authorInitials}
+                      className="w-8 h-8 text-xs"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm text-foreground">
+                        <span className="font-medium">{item.author}</span>{" "}
+                        <span className="text-foreground-subtle">{item.text}</span>
+                      </p>
+                      <p className="mt-0.5 text-xs text-foreground-faint">
+                        {formatActivityTime(item.createdAt)}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
 
             <form onSubmit={addComment} className="mt-4 flex items-start gap-3">
               <Avatar

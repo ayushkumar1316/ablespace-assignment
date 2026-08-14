@@ -15,6 +15,7 @@ import { TASKS, formatDate } from "../data/tasks";
 import { AddProjectModal } from "./add-project-modal";
 import { Avatar } from "./avatar";
 import { DisplayMenu } from "./display-menu";
+import { EmptyState } from "./empty-state";
 import { ProjectDetail } from "./project-detail";
 import { TaskDetail } from "./task-detail";
 
@@ -29,6 +30,36 @@ function SearchIcon() {
     >
       <circle cx="11" cy="11" r="7" strokeWidth="2" />
       <path d="M21 21l-4.35-4.35" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SearchXIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" strokeWidth="2" />
+      <path d="M21 21l-4.35-4.35M8.5 8.5l5 5M13.5 8.5l-5 5" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function FolderPlusIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M12 11v4M10 13h4" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -134,7 +165,37 @@ export function ProjectsWorkspace() {
       </header>
 
       <div className="flex-1 overflow-hidden pt-4">
-        <div className="rounded-lg border border-border bg-surface overflow-hidden">
+        {filteredProjects.length === 0 ? (
+          <EmptyState
+            icon={searchQuery.trim() ? <SearchXIcon /> : <FolderPlusIcon />}
+            title={searchQuery.trim() ? "No results found" : "No projects yet"}
+            description={
+              searchQuery.trim()
+                ? "No projects match your search. Try a different keyword or clear the search."
+                : "Create your first project to start organizing your work."
+            }
+            action={
+              searchQuery.trim() ? (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+                >
+                  Clear search
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsAddProjectOpen(true)}
+                  className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
+                >
+                  Add Project
+                </button>
+              )
+            }
+          />
+        ) : (
+          <div className="rounded-lg border border-border bg-surface overflow-hidden">
           <div className="overflow-x-auto h-full">
             <table className="w-full text-sm border-collapse">
               <thead>
@@ -242,10 +303,6 @@ export function ProjectsWorkspace() {
             </table>
           </div>
         </div>
-        {filteredProjects.length === 0 && (
-          <p className="mt-6 text-center text-sm text-foreground-subtle">
-            No projects match your search.
-          </p>
         )}
       </div>
 

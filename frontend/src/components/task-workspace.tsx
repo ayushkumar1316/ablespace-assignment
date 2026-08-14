@@ -8,6 +8,37 @@ import { KanbanBoard } from "./kanban-board";
 import { TaskList } from "./task-list";
 import { TaskDetail } from "./task-detail";
 import { AddTaskModal } from "./add-task-modal";
+import { EmptyState } from "./empty-state";
+
+function InboxIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M4 6h16v12H4z" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M4 13h5l1.5 2.5h3L15 13h5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function SearchXIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" strokeWidth="2" />
+      <path d="M21 21l-4.35-4.35M8.5 8.5l5 5M13.5 8.5l-5 5" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export function TaskWorkspace() {
   const [tasks, setTasks] = useState<Task[]>(TASKS);
@@ -83,7 +114,36 @@ export function TaskWorkspace() {
           />
 
           <div className="flex-1 overflow-hidden pt-4">
-            {view === "board" ? (
+            {filteredTasks.length === 0 ? (
+              <EmptyState
+                icon={searchQuery.trim() ? <SearchXIcon /> : <InboxIcon />}
+                title={searchQuery.trim() ? "No results found" : "No tasks yet"}
+                description={
+                  searchQuery.trim()
+                    ? "No tasks match your search. Try a different keyword or clear the search."
+                    : "Create your first task to start organizing your work."
+                }
+                action={
+                  searchQuery.trim() ? (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+                    >
+                      Clear search
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setIsAddTaskOpen(true)}
+                      className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
+                    >
+                      Add Task
+                    </button>
+                  )
+                }
+              />
+            ) : view === "board" ? (
               <KanbanBoard
                 tasks={filteredTasks}
                 fields={fields}
