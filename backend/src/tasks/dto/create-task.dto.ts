@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -12,11 +12,17 @@ import {
 } from 'class-validator';
 import { TASK_PRIORITIES, TASK_STATUSES } from '../task.schema';
 
+const Trim = () =>
+  Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  );
+
 export class SubtaskDto {
   @IsOptional()
   @IsString()
   id?: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -31,15 +37,19 @@ export class ActivityDto {
   @IsString()
   id?: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   author: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   authorInitials: string;
 
+  @Trim()
   @IsString()
+  @IsNotEmpty()
   text: string;
 
   @IsString()
@@ -47,6 +57,7 @@ export class ActivityDto {
 }
 
 export class CreateTaskDto {
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @MaxLength(200)

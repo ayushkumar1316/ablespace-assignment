@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
@@ -6,7 +7,13 @@ import {
   MaxLength,
 } from 'class-validator';
 
+const Trim = () =>
+  Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  );
+
 export class UpdateProfileDto {
+  @Trim()
   @IsOptional()
   @IsString()
   @IsNotEmpty()

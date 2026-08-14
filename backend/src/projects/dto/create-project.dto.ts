@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -11,7 +11,13 @@ import {
 } from 'class-validator';
 import { PROJECT_STATUSES } from '../project.schema';
 
+const Trim = () =>
+  Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  );
+
 export class ProjectMemberDto {
+  @Trim()
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -22,6 +28,7 @@ export class ProjectMemberDto {
 }
 
 export class CreateProjectDto {
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @MaxLength(200)
