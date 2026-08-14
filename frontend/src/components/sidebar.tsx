@@ -90,6 +90,8 @@ export function Sidebar({
   onThemeChange,
   colorMode,
   onColorChange,
+  mobileOpen,
+  onCloseMobile,
 }: {
   section: Section;
   onNavigate: (section: Section) => void;
@@ -97,102 +99,159 @@ export function Sidebar({
   onThemeChange: (theme: ThemeMode) => void;
   colorMode: ColorMode;
   onColorChange: (color: ColorMode) => void;
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
 }) {
   const [minimized, setMinimized] = useState(false);
 
-  return (
-    <aside
-      className={`shrink-0 bg-surface border-r border-border flex flex-col transition-all duration-300 ${
-        minimized ? "w-16" : "w-64"
-      }`}
-    >
-      {/* User Profile Section */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-        <div className="w-8 h-8 rounded-full bg-surface-inverse text-on-inverse text-xs font-semibold flex items-center justify-center shrink-0">
-          MD
-        </div>
-        {!minimized && (
-          <span className="font-medium text-foreground truncate">Mandira Datta</span>
-        )}
+  const handleNavigate = (next: Section) => {
+    onNavigate(next);
+    onCloseMobile();
+  };
+
+  const renderNav = (isMinimized: boolean) => (
+    <nav className="flex-1 flex flex-col overflow-y-auto p-2">
+      <p className={`px-3 py-2 text-xs font-semibold text-foreground-faint uppercase tracking-wide ${isMinimized ? "text-center px-0" : ""}`}>
+        {isMinimized ? "•" : "Main"}
+      </p>
+
+      {NAV_ITEMS.map((item, index) => (
         <button
+          key={item.key}
           type="button"
-          onClick={() => setMinimized((value) => !value)}
-          className="ml-auto text-foreground-faint hover:text-foreground-muted p-1 rounded"
-          aria-label={minimized ? "Expand sidebar" : "Minimize sidebar"}
+          onClick={() => handleNavigate(item.key)}
+          aria-current={section === item.key ? "page" : undefined}
+          className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+            index > 0 ? "mt-1 " : ""
+          }${
+            section === item.key
+              ? "bg-accent-soft text-accent-strong font-medium"
+              : "text-foreground-muted hover:bg-surface-subtle hover:text-foreground"
+          }`}
         >
-          <svg
-            className={`w-4 h-4 transition-transform ${minimized ? "rotate-180" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          {item.icon}
+          {!isMinimized && <span className="text-sm">{item.label}</span>}
         </button>
+      ))}
+    </nav>
+  );
+
+  const renderThemeControls = () => (
+    <div className="p-4 border-t border-border space-y-3">
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-foreground-subtle">Theme</label>
+        <SelectMenu
+          value={theme}
+          options={THEME_MENU_OPTIONS}
+          onChange={(value) => onThemeChange(value as ThemeMode)}
+        />
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 flex flex-col overflow-y-auto p-2">
-        <p className={`px-3 py-2 text-xs font-semibold text-foreground-faint uppercase tracking-wide ${minimized ? "text-center px-0" : ""}`}>
-          {minimized ? "•" : "Main"}
-        </p>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-foreground-subtle">Color Mode</label>
+        <SelectMenu
+          value={colorMode}
+          options={COLOR_MENU_OPTIONS}
+          onChange={(value) => onColorChange(value as ColorMode)}
+          renderOption={(option) => (
+            <span className="flex items-center gap-2">
+              <span
+                className="w-3 h-3 rounded-full"
+                style={{
+                  backgroundColor: COLOR_SWATCH[option.value as ColorMode],
+                }}
+              />
+              <span>{option.label}</span>
+            </span>
+          )}
+        />
+      </div>
+    </div>
+  );
 
-        {NAV_ITEMS.map((item, index) => (
+  return (
+    <>
+      {/* Desktop / Tablet sidebar */}
+      <aside
+        className={`hidden md:flex shrink-0 bg-surface border-r border-border flex-col transition-all duration-300 ${
+          minimized ? "w-16" : "w-64"
+        }`}
+      >
+        {/* User Profile Section */}
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+          <div className="w-8 h-8 rounded-full bg-surface-inverse text-on-inverse text-xs font-semibold flex items-center justify-center shrink-0">
+            MD
+          </div>
+          {!minimized && (
+            <span className="font-medium text-foreground truncate">Mandira Datta</span>
+          )}
           <button
-            key={item.key}
             type="button"
-            onClick={() => onNavigate(item.key)}
-            aria-current={section === item.key ? "page" : undefined}
-            className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-              index > 0 ? "mt-1 " : ""
-            }${
-              section === item.key
-                ? "bg-accent-soft text-accent-strong font-medium"
-                : "text-foreground-muted hover:bg-surface-subtle hover:text-foreground"
-            }`}
+            onClick={() => setMinimized((value) => !value)}
+            className="ml-auto text-foreground-faint hover:text-foreground-muted p-1 rounded"
+            aria-label={minimized ? "Expand sidebar" : "Minimize sidebar"}
           >
-            {item.icon}
-            {!minimized && <span className="text-sm">{item.label}</span>}
+            <svg
+              className={`w-4 h-4 transition-transform ${minimized ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
-        ))}
-      </nav>
+        </div>
 
-      {/* Footer Utilities */}
-      <div className="p-4 border-t border-border space-y-3">
-        {!minimized && (
-          <>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-foreground-subtle">Theme</label>
-              <SelectMenu
-                value={theme}
-                options={THEME_MENU_OPTIONS}
-                onChange={(value) => onThemeChange(value as ThemeMode)}
-              />
-            </div>
+        {renderNav(minimized)}
 
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-foreground-subtle">Color Mode</label>
-              <SelectMenu
-                value={colorMode}
-                options={COLOR_MENU_OPTIONS}
-                onChange={(value) => onColorChange(value as ColorMode)}
-                renderOption={(option) => (
-                  <span className="flex items-center gap-2">
-                    <span
-                      className="w-3 h-3 rounded-full"
-                      style={{
-                        backgroundColor: COLOR_SWATCH[option.value as ColorMode],
-                      }}
-                    />
-                    <span>{option.label}</span>
-                  </span>
-                )}
-              />
+        {!minimized && renderThemeControls()}
+      </aside>
+
+      {/* Mobile off-canvas drawer */}
+      <div
+        className={`fixed inset-0 z-50 md:hidden ${mobileOpen ? "" : "pointer-events-none"}`}
+        aria-hidden={!mobileOpen}
+      >
+        <div
+          className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
+            mobileOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={onCloseMobile}
+        />
+        <aside
+          className={`absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col bg-surface border-r border-border shadow-xl transition-transform duration-300 ${
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+            <div className="w-8 h-8 rounded-full bg-surface-inverse text-on-inverse text-xs font-semibold flex items-center justify-center shrink-0">
+              MD
             </div>
-          </>
-        )}
+            <span className="font-medium text-foreground truncate">Mandira Datta</span>
+            <button
+              type="button"
+              onClick={onCloseMobile}
+              className="ml-auto text-foreground-faint hover:text-foreground-muted p-1 rounded"
+              aria-label="Close sidebar"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M6 6l12 12M18 6L6 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+
+          {renderNav(false)}
+
+          {renderThemeControls()}
+        </aside>
       </div>
-    </aside>
+    </>
   );
 }

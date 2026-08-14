@@ -18,6 +18,20 @@ const COLOR_MODES: ColorMode[] = [
   "black",
 ];
 
+function MenuIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M4 7h16M4 12h16M4 17h16" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function getThemeSnapshot(): ThemeMode {
   if (typeof window === "undefined") {
     return "light";
@@ -49,6 +63,7 @@ export function AppShell({
   loginMode?: boolean;
 }) {
   const [section, setSection] = useState<Section>("tasks");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const theme = useSyncExternalStore<ThemeMode>(
     subscribeToStorage,
     getThemeSnapshot,
@@ -78,6 +93,19 @@ export function AppShell({
     document.documentElement.dataset.accent = colorMode;
   }, [colorMode]);
 
+  useEffect(() => {
+    if (!sidebarOpen) {
+      return;
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [sidebarOpen]);
+
   if (loginMode) {
     return <Login />;
   }
@@ -91,12 +119,30 @@ export function AppShell({
         onThemeChange={handleThemeChange}
         colorMode={colorMode}
         onColorChange={handleColorChange}
+        mobileOpen={sidebarOpen}
+        onCloseMobile={() => setSidebarOpen(false)}
       />
 
-      <main className="flex-1 flex flex-col overflow-hidden bg-surface p-6">
-        {section === "tasks" && children}
-        {section === "projects" && <ProjectsWorkspace />}
-        {section === "settings" && <ProfileSettings />}
+      <main className="flex-1 flex flex-col overflow-hidden bg-surface">
+        <div className="md:hidden flex items-center justify-between border-b border-border bg-surface px-4 py-2.5">
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open sidebar"
+            className="-ml-1 rounded-md p-1.5 text-foreground-muted hover:bg-surface-subtle hover:text-foreground transition-colors"
+          >
+            <MenuIcon />
+          </button>
+          <span className="text-base font-semibold text-foreground">
+            AbleSpace
+          </span>
+          <span className="w-6" aria-hidden="true" />
+        </div>
+        <div className="flex-1 min-h-0 p-3 md:p-6">
+          {section === "tasks" && children}
+          {section === "projects" && <ProjectsWorkspace />}
+          {section === "settings" && <ProfileSettings />}
+        </div>
       </main>
     </div>
   );

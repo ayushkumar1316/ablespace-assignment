@@ -33,7 +33,7 @@
 - [x] 6.2 — Add Project UI
 - [x] 6.3 — Accent Color System
 - [x] 6.4 — Color Mode behavior
-- [ ] 6.5 — Responsive strategy
+- [x] 6.5 — Responsive strategy
 - [ ] 6.6 — Drag visual states
 - [ ] 6.7 — Empty states
 - [ ] 6.8 — Profile detail level
@@ -88,9 +88,9 @@
 
 ## Current Position
 
-**Current phase: Phase 6.4 — Color Mode behavior**
+**Current phase: Phase 6.5 — Responsive strategy**
 
 Next milestone:
-**Phase 6.5 — Responsive strategy**
+**Phase 6.6 — Drag visual states**
 
 Do not implement or mark future phases complete until their actual work is finished and verified.

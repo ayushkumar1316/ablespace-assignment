@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function ColumnsIcon() {
   return (
@@ -41,12 +41,30 @@ export function DisplayMenu<K extends string>({
   onChange: (key: K, value: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(
+    null
+  );
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const toggle = () => {
+    if (!open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const width = 224;
+      const left = Math.min(
+        Math.max(rect.left, 8),
+        window.innerWidth - width - 8
+      );
+      setCoords({ top: rect.bottom + 8, left });
+    }
+    setOpen((value) => !value);
+  };
 
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => setOpen((open) => !open)}
+        onClick={toggle}
         className={`relative z-20 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
           open
             ? "bg-surface-subtle text-foreground"
@@ -57,14 +75,17 @@ export function DisplayMenu<K extends string>({
         Display
       </button>
 
-      {open && (
+      {open && coords && (
         <>
           <div
             className="fixed inset-0 z-10"
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute right-0 top-full z-30 mt-2 w-56 rounded-lg border border-border bg-surface p-1.5 shadow-lg">
+          <div
+            className="fixed z-30 w-56 rounded-lg border border-border bg-surface p-1.5 shadow-lg"
+            style={{ top: coords.top, left: coords.left }}
+          >
             <p className="px-2 pt-1.5 pb-1 text-xs font-medium text-foreground-subtle uppercase tracking-wide">
               Display fields
             </p>

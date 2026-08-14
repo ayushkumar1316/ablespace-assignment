@@ -72,33 +72,35 @@ export function TopBar({
 }) {
   return (
     <header className="flex items-center gap-4 border-b border-border bg-surface px-4 py-3 flex-wrap">
-      <h1 className="text-lg font-semibold text-foreground">Tasks</h1>
+      <div className="flex items-center gap-3 sm:gap-4">
+        <h1 className="text-lg font-semibold text-foreground">Tasks</h1>
 
-      <div className="flex items-center gap-1 rounded-lg bg-surface-subtle p-0.5">
-        <button
-          type="button"
-          onClick={() => setSelectedView("board")}
-          className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-            selectedView === "board"
-              ? "bg-accent text-white shadow-sm"
-              : "text-foreground-subtle hover:text-foreground-secondary"
-          }`}
-        >
-          <BoardIcon />
-          Board
-        </button>
-        <button
-          type="button"
-          onClick={() => setSelectedView("list")}
-          className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-            selectedView === "list"
-              ? "bg-accent text-white shadow-sm"
-              : "text-foreground-subtle hover:text-foreground-secondary"
-          }`}
-        >
-          <ListIcon />
-          List
-        </button>
+        <div className="flex items-center gap-1 rounded-lg bg-surface-subtle p-0.5">
+          <button
+            type="button"
+            onClick={() => setSelectedView("board")}
+            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              selectedView === "board"
+                ? "bg-accent text-white shadow-sm"
+                : "text-foreground-subtle hover:text-foreground-secondary"
+            }`}
+          >
+            <BoardIcon />
+            Board
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedView("list")}
+            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              selectedView === "list"
+                ? "bg-accent text-white shadow-sm"
+                : "text-foreground-subtle hover:text-foreground-secondary"
+            }`}
+          >
+            <ListIcon />
+            List
+          </button>
+        </div>
       </div>
 
       <div className="relative flex-1 min-w-[160px]">

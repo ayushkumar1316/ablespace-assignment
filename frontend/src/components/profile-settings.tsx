@@ -31,7 +31,7 @@ export function ProfileSettings() {
             Update your personal information.
           </p>
 
-          <div className="mt-4 flex items-start gap-4">
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start">
             <Avatar
               name={name}
               initials={initialsFromName(name)}

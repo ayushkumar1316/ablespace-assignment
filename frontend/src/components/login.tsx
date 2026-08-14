@@ -7,7 +7,7 @@ export function Login() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="w-full max-w-md rounded-2xl bg-surface shadow-lg p-8 flex flex-col items-center gap-6">
+      <div className="w-full max-w-md rounded-2xl bg-surface shadow-lg p-6 sm:p-8 flex flex-col items-center gap-6">
         <div className="w-14 h-14 rounded-2xl bg-surface-subtle flex items-center justify-center mb-6">
           <div className="w-7 h-7 bg-surface-strong rounded-text text-foreground-subtle flex items-center justify-center text-xs font-bold">
             LM
