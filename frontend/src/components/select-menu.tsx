@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export interface SelectOption {
   value: string;
@@ -47,13 +47,28 @@ export function SelectMenu({
   renderOption?: (option: SelectOption) => React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const selected = options.find((option) => option.value === value);
+
+  const toggle = () => {
+    if (!open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const estimatedHeight = options.length * 32 + 8;
+      setFlip(
+        rect.bottom + 6 + estimatedHeight > window.innerHeight &&
+          rect.top - 6 - estimatedHeight > 0
+      );
+    }
+    setOpen((prev) => !prev);
+  };
 
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggle}
         className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -75,7 +90,9 @@ export function SelectMenu({
           />
           <div
             role="listbox"
-            className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg"
+            className={`absolute left-0 right-0 z-30 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg ${
+              flip ? "bottom-full mb-1.5" : "top-full mt-1.5"
+            }`}
           >
             {options.map((option) => {
               const isSelected = option.value === value;

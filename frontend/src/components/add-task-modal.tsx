@@ -150,6 +150,7 @@ export function AddTaskModal({
         </div>
 
         <form
+          id="add-task-form"
           onSubmit={handleSubmit}
           className="flex-1 overflow-y-auto px-5 py-4"
         >
@@ -264,23 +265,24 @@ export function AddTaskModal({
               className={inputClass(false)}
             />
           </div>
-
-          <div className="mt-6 flex justify-end gap-2 border-t border-border-subtle pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
-            >
-              Create Task
-            </button>
-          </div>
         </form>
+
+        <div className="flex justify-end gap-2 border-t border-border-subtle px-5 py-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="add-task-form"
+            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
+          >
+            Create Task
+          </button>
+        </div>
       </div>
     </div>
   );

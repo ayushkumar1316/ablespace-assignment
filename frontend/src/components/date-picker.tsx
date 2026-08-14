@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { formatFullDate } from "../data/tasks";
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -166,6 +166,20 @@ export function DatePicker({
   single?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const openCalendar = () => {
+    if (wrapperRef.current) {
+      const rect = wrapperRef.current.getBoundingClientRect();
+      const estimatedHeight = 320;
+      setFlip(
+        rect.bottom + 6 + estimatedHeight > window.innerHeight &&
+          rect.top - 6 - estimatedHeight > 0
+      );
+    }
+    setOpen(true);
+  };
 
   const handleDayClick = (iso: string) => {
     if (single) {
@@ -185,11 +199,11 @@ export function DatePicker({
   };
 
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <div className="space-y-2">
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={openCalendar}
           className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
         >
           <CalendarIcon />
@@ -200,7 +214,7 @@ export function DatePicker({
         {!single && (
           <button
             type="button"
-            onClick={() => setOpen(true)}
+            onClick={openCalendar}
             className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
           >
             <CalendarIcon />
@@ -218,7 +232,11 @@ export function DatePicker({
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-border bg-surface shadow-lg">
+          <div
+            className={`absolute left-0 right-0 z-30 overflow-hidden rounded-lg border border-border bg-surface shadow-lg ${
+              flip ? "bottom-full mb-1.5" : "top-full mt-1.5"
+            }`}
+          >
             <Calendar
               startDate={startDate}
               endDate={endDate}
