@@ -36,7 +36,7 @@
 - [x] 6.5 — Responsive strategy
 - [x] 6.6 — Drag visual states
 - [x] 6.7 — Empty states
-- [ ] 6.8 — Profile detail level
+- [x] 6.8 — Profile detail level
 
 ## Phase 7 — Backend
 - [ ] MongoDB/Mongoose setup
@@ -88,9 +88,9 @@
 
 ## Current Position
 
-**Current phase: Phase 6.7 — Empty states**
+**Current phase: Phase 6.8 — Profile detail level**
 
 Next milestone:
-**Phase 6.8 — Profile detail level**
+**Phase 6 — Completed**
 
 Do not implement or mark future phases complete until their actual work is finished and verified.
