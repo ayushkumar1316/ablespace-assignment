@@ -1,0 +1,61 @@
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
+import { PROJECT_STATUSES } from '../project.schema';
+
+export class ProjectMemberDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  initials?: string;
+}
+
+export class CreateProjectDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(200)
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsEnum(PROJECT_STATUSES)
+  status?: (typeof PROJECT_STATUSES)[number];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+
+  @IsOptional()
+  @IsString()
+  dueDate?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProjectMemberDto)
+  members?: ProjectMemberDto[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  taskIds?: string[];
+
+  @IsOptional()
+  @IsNumber()
+  order?: number;
+}
