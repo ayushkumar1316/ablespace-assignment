@@ -37,7 +37,7 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
 function CalendarIcon() {
   return (
     <svg
-      className="w-3.5 h-3.5 text-gray-400"
+      className="w-3.5 h-3.5 text-foreground-faint"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -95,23 +95,23 @@ function Calendar({
         <button
           type="button"
           onClick={() => changeMonth(-1)}
-          className="rounded p-1 text-gray-500 hover:bg-gray-100"
+          className="rounded p-1 text-foreground-subtle hover:bg-surface-subtle"
           aria-label="Previous month"
         >
           <ChevronIcon direction="left" />
         </button>
-        <span className="text-sm font-semibold text-gray-900">{monthLabel}</span>
+        <span className="text-sm font-semibold text-foreground">{monthLabel}</span>
         <button
           type="button"
           onClick={() => changeMonth(1)}
-          className="rounded p-1 text-gray-500 hover:bg-gray-100"
+          className="rounded p-1 text-foreground-subtle hover:bg-surface-subtle"
           aria-label="Next month"
         >
           <ChevronIcon direction="right" />
         </button>
       </div>
 
-      <div className="grid grid-cols-7 text-center text-[11px] font-medium text-gray-400 mb-1">
+      <div className="grid grid-cols-7 text-center text-[11px] font-medium text-foreground-faint mb-1">
         {WEEKDAYS.map((weekday) => (
           <span key={weekday} className="py-1">
             {weekday}
@@ -141,8 +141,8 @@ function Calendar({
                   : inRange
                     ? "bg-accent-soft text-accent-strong"
                     : isToday
-                      ? "ring-1 ring-inset ring-accent text-gray-900 hover:bg-gray-100"
-                      : "text-gray-700 hover:bg-gray-100"
+                      ? "ring-1 ring-inset ring-accent text-foreground hover:bg-surface-subtle"
+                      : "text-foreground-secondary hover:bg-surface-subtle"
               }`}
             >
               {Number(cell.slice(8, 10))}
@@ -190,7 +190,7 @@ export function DatePicker({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="relative z-20 flex w-full items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm text-gray-700 hover:border-gray-300"
+          className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
         >
           <CalendarIcon />
           <span className="flex-1 truncate text-left">
@@ -201,7 +201,7 @@ export function DatePicker({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="relative z-20 flex w-full items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm text-gray-700 hover:border-gray-300"
+            className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
           >
             <CalendarIcon />
             <span className="flex-1 truncate text-left">
@@ -218,7 +218,7 @@ export function DatePicker({
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+          <div className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-border bg-surface shadow-lg">
             <Calendar
               startDate={startDate}
               endDate={endDate}

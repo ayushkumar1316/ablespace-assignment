@@ -104,11 +104,11 @@ export function ProjectsWorkspace() {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="flex items-center gap-4 border-b border-gray-200 bg-white px-4 py-3 flex-wrap">
-        <h1 className="text-lg font-semibold text-gray-900">Projects</h1>
+      <header className="flex items-center gap-4 border-b border-border bg-surface px-4 py-3 flex-wrap">
+        <h1 className="text-lg font-semibold text-foreground">Projects</h1>
 
         <div className="relative flex-1 min-w-[160px]">
-          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-foreground-faint">
             <SearchIcon />
           </span>
           <input
@@ -116,7 +116,7 @@ export function ProjectsWorkspace() {
             placeholder="Search projects..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-9 pl-8 pr-3 rounded-md border border-gray-200 bg-gray-50 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="w-full h-9 pl-8 pr-3 rounded-md border border-border bg-surface-muted text-sm placeholder:text-foreground-faint focus:outline-none focus:ring-2 focus:ring-border"
           />
         </div>
 
@@ -134,31 +134,31 @@ export function ProjectsWorkspace() {
       </header>
 
       <div className="flex-1 overflow-hidden pt-4">
-        <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+        <div className="rounded-lg border border-border bg-surface overflow-hidden">
           <div className="overflow-x-auto h-full">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="border-b border-gray-200 text-left">
-                  <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <tr className="border-b border-border text-left">
+                  <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                     Project
                   </th>
                   {fields.status && (
-                    <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                       Status
                     </th>
                   )}
                   {fields.members && (
-                    <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                       Members
                     </th>
                   )}
                   {fields.dueDate && (
-                    <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                       Due Date
                     </th>
                   )}
                   {fields.tags && (
-                    <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                       Tags
                     </th>
                   )}
@@ -177,13 +177,13 @@ export function ProjectsWorkspace() {
                         setSelectedProjectId(project.id);
                       }
                     }}
-                    className="border-t border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                    className="border-t border-border-subtle hover:bg-surface-muted transition-colors cursor-pointer"
                   >
                     <td className="px-3 py-2.5">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-foreground">
                         {project.name}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-foreground-subtle">
                         {project.description}
                       </div>
                     </td>
@@ -205,12 +205,12 @@ export function ProjectsWorkspace() {
                                 key={member.name}
                                 name={member.name}
                                 initials={member.initials}
-                                className="w-6 h-6 text-[10px] ring-2 ring-white"
+                                className="w-6 h-6 text-[10px] ring-2 ring-surface"
                               />
                             ))}
                           </div>
                           {project.members.length > 3 && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-foreground-subtle">
                               +{project.members.length - 3}
                             </span>
                           )}
@@ -218,7 +218,7 @@ export function ProjectsWorkspace() {
                       </td>
                     )}
                     {fields.dueDate && (
-                      <td className="px-3 py-2.5 text-xs text-gray-500 whitespace-nowrap">
+                      <td className="px-3 py-2.5 text-xs text-foreground-subtle whitespace-nowrap">
                         {formatDate(project.dueDate)}
                       </td>
                     )}
@@ -228,7 +228,7 @@ export function ProjectsWorkspace() {
                           {project.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600"
+                              className="inline-flex items-center rounded-full bg-surface-subtle px-2 py-0.5 text-[11px] font-medium text-foreground-muted"
                             >
                               {tag}
                             </span>
@@ -243,7 +243,7 @@ export function ProjectsWorkspace() {
           </div>
         </div>
         {filteredProjects.length === 0 && (
-          <p className="mt-6 text-center text-sm text-gray-500">
+          <p className="mt-6 text-center text-sm text-foreground-subtle">
             No projects match your search.
           </p>
         )}

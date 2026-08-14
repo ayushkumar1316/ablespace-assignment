@@ -3,9 +3,24 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --surface: #ffffff;
+  --surface-muted: #f9fafb;
+  --surface-subtle: #f3f4f6;
+  --surface-strong: #d1d5db;
+  --surface-inverse: #171717;
+  --on-inverse: #ffffff;
+  --foreground-secondary: #374151;
+  --foreground-muted: #4b5563;
+  --foreground-subtle: #6b7280;
+  --foreground-faint: #9ca3af;
+  --foreground-fainter: #d1d5db;
+  --border: #e5e7eb;
+  --border-subtle: #f3f4f6;
+  --border-strong: #d1d5db;
   --accent: #3b82f6;
   --accent-strong: color-mix(in srgb, var(--accent) 82%, #000000);
   --accent-soft: color-mix(in srgb, var(--accent) 12%, #ffffff);
+  color-scheme: light;
 }
 
 [data-accent="amber"] {
@@ -32,21 +47,50 @@
   --accent: #171717;
 }
 
+:root[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --surface: #1a1a1a;
+  --surface-muted: #171717;
+  --surface-subtle: #141414;
+  --surface-strong: #3d3d3d;
+  --surface-inverse: #e5e5e5;
+  --on-inverse: #171717;
+  --foreground-secondary: #d4d4d4;
+  --foreground-muted: #ababab;
+  --foreground-subtle: #9ca3af;
+  --foreground-faint: #757575;
+  --foreground-fainter: #4f4f4f;
+  --border: #2a2a2a;
+  --border-subtle: #232323;
+  --border-strong: #3d3d3d;
+  --accent-strong: color-mix(in srgb, var(--accent) 85%, #ffffff);
+  --accent-soft: color-mix(in srgb, var(--accent) 20%, #141414);
+  color-scheme: dark;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-strong: var(--surface-strong);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-on-inverse: var(--on-inverse);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-foreground-faint: var(--foreground-faint);
+  --color-foreground-fainter: var(--foreground-fainter);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

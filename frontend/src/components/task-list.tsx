@@ -10,7 +10,7 @@ import { PriorityBadge } from "./priority-badge";
 function ChevronIcon({ expanded }: { expanded: boolean }) {
   return (
     <svg
-      className={`w-4 h-4 text-gray-400 transition-transform ${expanded ? "" : "-rotate-90"}`}
+      className={`w-4 h-4 text-foreground-faint transition-transform ${expanded ? "" : "-rotate-90"}`}
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -40,32 +40,32 @@ export function TaskList({
   const colSpan = 2 + fieldCount - 1;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+    <div className="rounded-lg border border-border bg-surface overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b border-gray-200 text-left">
+            <tr className="border-b border-border text-left">
               <th className="w-10 px-3 py-2.5" />
-              <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                 Task
               </th>
               {fields.priority && (
-                <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                   Priority
                 </th>
               )}
               {fields.tags && (
-                <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                   Tags
                 </th>
               )}
               {fields.dueDate && (
-                <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                   Due Date
                 </th>
               )}
               {fields.assignee && (
-                <th className="px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <th className="px-3 py-2.5 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
                   Assignee
                 </th>
               )}
@@ -77,7 +77,7 @@ export function TaskList({
               const isCollapsed = Boolean(collapsed[key]);
               return (
                 <Fragment key={key}>
-                  <tr className="bg-gray-50">
+                  <tr className="bg-surface-muted">
                     <td colSpan={colSpan} className="px-3 py-2">
                       <button
                         type="button"
@@ -86,8 +86,8 @@ export function TaskList({
                         aria-expanded={!isCollapsed}
                       >
                         <ChevronIcon expanded={!isCollapsed} />
-                        <span className="text-sm font-semibold text-gray-700">{label}</span>
-                        <span className="text-xs text-gray-500">{sectionTasks.length}</span>
+                        <span className="text-sm font-semibold text-foreground-secondary">{label}</span>
+                        <span className="text-xs text-foreground-subtle">{sectionTasks.length}</span>
                       </button>
                     </td>
                   </tr>
@@ -104,14 +104,14 @@ export function TaskList({
                             onSelect(task.id);
                           }
                         }}
-                        className="border-t border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                        className="border-t border-border-subtle hover:bg-surface-muted transition-colors cursor-pointer"
                       >
                         <td className="px-3 py-2.5">
                           <DragHandle />
                         </td>
                         <td className="px-3 py-2.5">
-                          <div className="text-sm font-medium text-gray-900">{task.title}</div>
-                          <div className="text-xs text-gray-500">{task.description}</div>
+                          <div className="text-sm font-medium text-foreground">{task.title}</div>
+                          <div className="text-xs text-foreground-subtle">{task.description}</div>
                         </td>
                         {fields.priority && (
                           <td className="px-3 py-2.5">
@@ -124,7 +124,7 @@ export function TaskList({
                               {task.tags.map((tag) => (
                                 <span
                                   key={tag}
-                                  className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600"
+                                  className="inline-flex items-center rounded-full bg-surface-subtle px-2 py-0.5 text-[11px] font-medium text-foreground-muted"
                                 >
                                   {tag}
                                 </span>
@@ -133,7 +133,7 @@ export function TaskList({
                           </td>
                         )}
                         {fields.dueDate && (
-                          <td className="px-3 py-2.5 text-xs text-gray-500 whitespace-nowrap">
+                          <td className="px-3 py-2.5 text-xs text-foreground-subtle whitespace-nowrap">
                             {formatDate(task.dueDate)}
                           </td>
                         )}
@@ -145,7 +145,7 @@ export function TaskList({
                                 initials={task.assigneeInitials}
                                 className="w-6 h-6 text-[10px]"
                               />
-                              <span className="text-sm text-gray-600 whitespace-nowrap">
+                              <span className="text-sm text-foreground-muted whitespace-nowrap">
                                 {task.assignee}
                               </span>
                             </div>

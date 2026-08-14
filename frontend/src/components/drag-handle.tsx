@@ -3,7 +3,7 @@
 export function DragHandle({ className = "" }: { className?: string }) {
   return (
     <svg
-      className={`w-4 h-4 shrink-0 text-gray-300 cursor-grab ${className}`}
+      className={`w-4 h-4 shrink-0 text-foreground-fainter cursor-grab ${className}`}
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"

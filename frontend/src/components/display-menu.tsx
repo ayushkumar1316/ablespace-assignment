@@ -49,8 +49,8 @@ export function DisplayMenu<K extends string>({
         onClick={() => setOpen((open) => !open)}
         className={`relative z-20 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
           open
-            ? "bg-gray-100 text-gray-900"
-            : "text-gray-600 hover:bg-gray-100"
+            ? "bg-surface-subtle text-foreground"
+            : "text-foreground-muted hover:bg-surface-subtle"
         }`}
       >
         <ColumnsIcon />
@@ -64,14 +64,14 @@ export function DisplayMenu<K extends string>({
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute right-0 top-full z-30 mt-2 w-56 rounded-lg border border-gray-200 bg-white p-1.5 shadow-lg">
-            <p className="px-2 pt-1.5 pb-1 text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <div className="absolute right-0 top-full z-30 mt-2 w-56 rounded-lg border border-border bg-surface p-1.5 shadow-lg">
+            <p className="px-2 pt-1.5 pb-1 text-xs font-medium text-foreground-subtle uppercase tracking-wide">
               Display fields
             </p>
             {options.map((option) => (
               <label
                 key={option.key}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-gray-50"
+                className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-muted"
               >
                 <input
                   type="checkbox"
@@ -79,7 +79,7 @@ export function DisplayMenu<K extends string>({
                   onChange={(e) => onChange(option.key, e.target.checked)}
                   className="w-4 h-4 accent-accent"
                 />
-                <span className="text-sm text-gray-700">{option.label}</span>
+                <span className="text-sm text-foreground-secondary">{option.label}</span>
                 {fields[option.key] && (
                   <span className="ml-auto text-accent">
                     <CheckIcon />

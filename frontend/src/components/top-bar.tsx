@@ -71,17 +71,17 @@ export function TopBar({
   onAddTask: () => void;
 }) {
   return (
-    <header className="flex items-center gap-4 border-b border-gray-200 bg-white px-4 py-3 flex-wrap">
-      <h1 className="text-lg font-semibold text-gray-900">Tasks</h1>
+    <header className="flex items-center gap-4 border-b border-border bg-surface px-4 py-3 flex-wrap">
+      <h1 className="text-lg font-semibold text-foreground">Tasks</h1>
 
-      <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-0.5">
+      <div className="flex items-center gap-1 rounded-lg bg-surface-subtle p-0.5">
         <button
           type="button"
           onClick={() => setSelectedView("board")}
           className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
             selectedView === "board"
               ? "bg-accent text-white shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
+              : "text-foreground-subtle hover:text-foreground-secondary"
           }`}
         >
           <BoardIcon />
@@ -93,7 +93,7 @@ export function TopBar({
           className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
             selectedView === "list"
               ? "bg-accent text-white shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
+              : "text-foreground-subtle hover:text-foreground-secondary"
           }`}
         >
           <ListIcon />
@@ -102,7 +102,7 @@ export function TopBar({
       </div>
 
       <div className="relative flex-1 min-w-[160px]">
-        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-foreground-faint">
           <SearchIcon />
         </span>
         <input
@@ -110,7 +110,7 @@ export function TopBar({
           placeholder="Search tasks..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-9 pl-8 pr-3 rounded-md border border-gray-200 bg-gray-50 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="w-full h-9 pl-8 pr-3 rounded-md border border-border bg-surface-muted text-sm placeholder:text-foreground-faint focus:outline-none focus:ring-2 focus:ring-border"
         />
       </div>
 
@@ -120,7 +120,7 @@ export function TopBar({
         <button
           type="button"
           onClick={onAddTask}
-          className="rounded-md px-3 py-1.5 text-sm font-medium bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
+          className="rounded-md px-3 py-1.5 text-sm font-medium bg-surface text-foreground-secondary border border-border hover:bg-surface-muted transition-colors"
         >
           Add Task
         </button>

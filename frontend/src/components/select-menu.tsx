@@ -10,7 +10,7 @@ export interface SelectOption {
 function ChevronDownIcon() {
   return (
     <svg
-      className="w-4 h-4 shrink-0 text-gray-400"
+      className="w-4 h-4 shrink-0 text-foreground-faint"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -54,7 +54,7 @@ export function SelectMenu({
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="relative z-20 flex w-full items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm text-gray-700 hover:border-gray-300"
+        className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -75,7 +75,7 @@ export function SelectMenu({
           />
           <div
             role="listbox"
-            className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+            className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg"
           >
             {options.map((option) => {
               const isSelected = option.value === value;
@@ -89,7 +89,7 @@ export function SelectMenu({
                     onChange(option.value);
                     setOpen(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-50"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground-secondary hover:bg-surface-muted"
                 >
                   <span className="flex-1 truncate">
                     {renderOption ? renderOption(option) : option.label}

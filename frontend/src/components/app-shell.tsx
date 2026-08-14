@@ -6,7 +6,7 @@ import { Sidebar } from "./sidebar";
 import { Login } from "./login";
 import { ProjectsWorkspace } from "./projects-workspace";
 import { ProfileSettings } from "./profile-settings";
-import { COLOR_MODE_STORAGE_KEY } from "../data/preferences";
+import { COLOR_MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "../data/preferences";
 import type { ColorMode, Section, ThemeMode } from "../data/preferences";
 
 const COLOR_MODES: ColorMode[] = [
@@ -18,6 +18,19 @@ const COLOR_MODES: ColorMode[] = [
   "black",
 ];
 
+function getThemeSnapshot(): ThemeMode {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+  const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  return stored === "dark" ? "dark" : "light";
+}
+
+function subscribeToStorage(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+}
+
 function getColorModeSnapshot(): ColorMode {
   if (typeof window === "undefined") {
     return "blue";
@@ -28,11 +41,6 @@ function getColorModeSnapshot(): ColorMode {
     : "blue";
 }
 
-function subscribeToColorMode(onChange: () => void) {
-  window.addEventListener("storage", onChange);
-  return () => window.removeEventListener("storage", onChange);
-}
-
 export function AppShell({
   children,
   loginMode,
@@ -41,17 +49,30 @@ export function AppShell({
   loginMode?: boolean;
 }) {
   const [section, setSection] = useState<Section>("tasks");
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const theme = useSyncExternalStore<ThemeMode>(
+    subscribeToStorage,
+    getThemeSnapshot,
+    () => "light"
+  );
   const colorMode = useSyncExternalStore<ColorMode>(
-    subscribeToColorMode,
+    subscribeToStorage,
     getColorModeSnapshot,
     () => "blue"
   );
+
+  const handleThemeChange = (next: ThemeMode) => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, next);
+    window.dispatchEvent(new Event("storage"));
+  };
 
   const handleColorChange = (next: ColorMode) => {
     window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, next);
     window.dispatchEvent(new Event("storage"));
   };
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   useEffect(() => {
     document.documentElement.dataset.accent = colorMode;
@@ -67,12 +88,12 @@ export function AppShell({
         section={section}
         onNavigate={setSection}
         theme={theme}
-        onThemeChange={setTheme}
+        onThemeChange={handleThemeChange}
         colorMode={colorMode}
         onColorChange={handleColorChange}
       />
 
-      <main className="flex-1 flex flex-col overflow-hidden bg-white p-6">
+      <main className="flex-1 flex flex-col overflow-hidden bg-surface p-6">
         {section === "tasks" && children}
         {section === "projects" && <ProjectsWorkspace />}
         {section === "settings" && <ProfileSettings />}

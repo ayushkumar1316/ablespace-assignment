@@ -48,19 +48,19 @@ export function TaskCard({
           onSelect();
         }
       }}
-      className="group bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all cursor-pointer p-3 flex gap-2"
+      className="group bg-surface rounded-lg border border-border shadow-sm hover:shadow-md hover:border-border-strong transition-all cursor-pointer p-3 flex gap-2"
     >
-      <DragHandle className="group-hover:text-gray-400 mt-0.5" />
+      <DragHandle className="group-hover:text-foreground-faint mt-0.5" />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <h4 className="text-sm font-medium text-gray-900 leading-snug">
+          <h4 className="text-sm font-medium text-foreground leading-snug">
             {task.title}
           </h4>
           {fields.priority && <PriorityBadge priority={task.priority} />}
         </div>
 
-        <p className="mt-1 text-xs text-gray-500 line-clamp-2">{task.description}</p>
+        <p className="mt-1 text-xs text-foreground-subtle line-clamp-2">{task.description}</p>
 
         <div className="mt-3 flex items-center gap-2">
           {fields.tags && task.tags.length > 0 && (
@@ -68,7 +68,7 @@ export function TaskCard({
               {task.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600"
+                  className="inline-flex items-center rounded-full bg-surface-subtle px-2 py-0.5 text-[11px] font-medium text-foreground-muted"
                 >
                   {tag}
                 </span>
@@ -78,7 +78,7 @@ export function TaskCard({
 
           <div className="ml-auto flex items-center gap-2 shrink-0">
             {fields.dueDate && (
-              <span className="inline-flex items-center gap-1 text-[11px] text-gray-500">
+              <span className="inline-flex items-center gap-1 text-[11px] text-foreground-subtle">
                 <CalendarIcon />
                 {formatDate(task.dueDate)}
               </span>

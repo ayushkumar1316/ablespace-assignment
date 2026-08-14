@@ -102,22 +102,22 @@ export function Sidebar({
 
   return (
     <aside
-      className={`shrink-0 bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ${
+      className={`shrink-0 bg-surface border-r border-border flex flex-col transition-all duration-300 ${
         minimized ? "w-16" : "w-64"
       }`}
     >
       {/* User Profile Section */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-200">
-        <div className="w-8 h-8 rounded-full bg-gray-900 text-white text-xs font-semibold flex items-center justify-center shrink-0">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+        <div className="w-8 h-8 rounded-full bg-surface-inverse text-on-inverse text-xs font-semibold flex items-center justify-center shrink-0">
           MD
         </div>
         {!minimized && (
-          <span className="font-medium text-gray-900 truncate">Mandira Datta</span>
+          <span className="font-medium text-foreground truncate">Mandira Datta</span>
         )}
         <button
           type="button"
           onClick={() => setMinimized((value) => !value)}
-          className="ml-auto text-gray-400 hover:text-gray-600 p-1 rounded"
+          className="ml-auto text-foreground-faint hover:text-foreground-muted p-1 rounded"
           aria-label={minimized ? "Expand sidebar" : "Minimize sidebar"}
         >
           <svg
@@ -134,7 +134,7 @@ export function Sidebar({
 
       {/* Navigation */}
       <nav className="flex-1 flex flex-col overflow-y-auto p-2">
-        <p className={`px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wide ${minimized ? "text-center px-0" : ""}`}>
+        <p className={`px-3 py-2 text-xs font-semibold text-foreground-faint uppercase tracking-wide ${minimized ? "text-center px-0" : ""}`}>
           {minimized ? "•" : "Main"}
         </p>
 
@@ -149,7 +149,7 @@ export function Sidebar({
             }${
               section === item.key
                 ? "bg-accent-soft text-accent-strong font-medium"
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                : "text-foreground-muted hover:bg-surface-subtle hover:text-foreground"
             }`}
           >
             {item.icon}
@@ -159,11 +159,11 @@ export function Sidebar({
       </nav>
 
       {/* Footer Utilities */}
-      <div className="p-4 border-t border-gray-200 space-y-3">
+      <div className="p-4 border-t border-border space-y-3">
         {!minimized && (
           <>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Theme</label>
+              <label className="text-xs text-foreground-subtle">Theme</label>
               <SelectMenu
                 value={theme}
                 options={THEME_MENU_OPTIONS}
@@ -172,7 +172,7 @@ export function Sidebar({
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Color Mode</label>
+              <label className="text-xs text-foreground-subtle">Color Mode</label>
               <SelectMenu
                 value={colorMode}
                 options={COLOR_MENU_OPTIONS}

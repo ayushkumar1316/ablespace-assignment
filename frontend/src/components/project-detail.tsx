@@ -9,7 +9,7 @@ import { TaskList } from "./task-list";
 function ChevronRightIcon() {
   return (
     <svg
-      className="w-4 h-4 text-gray-300"
+      className="w-4 h-4 text-foreground-fainter"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -23,7 +23,7 @@ function ChevronRightIcon() {
 function CalendarIcon() {
   return (
     <svg
-      className="w-3.5 h-3.5 text-gray-400"
+      className="w-3.5 h-3.5 text-foreground-faint"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -53,20 +53,20 @@ export function ProjectDetail({
         <button
           type="button"
           onClick={onBack}
-          className="font-medium text-gray-500 hover:text-gray-900 transition-colors"
+          className="font-medium text-foreground-subtle hover:text-foreground transition-colors"
         >
           Projects
         </button>
         <ChevronRightIcon />
-        <span className="font-medium text-gray-900">{project.name}</span>
+        <span className="font-medium text-foreground">{project.name}</span>
       </nav>
 
       {/* Summary */}
-      <div className="rounded-lg border border-gray-200 bg-white p-5">
+      <div className="rounded-lg border border-border bg-surface p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-gray-900">{project.name}</h1>
-            <p className="mt-1 text-sm text-gray-500">{project.description}</p>
+            <h1 className="text-xl font-bold text-foreground">{project.name}</h1>
+            <p className="mt-1 text-sm text-foreground-subtle">{project.description}</p>
           </div>
           <span
             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ${PROJECT_STATUS_STYLES[project.status]}`}
@@ -83,16 +83,16 @@ export function ProjectDetail({
                   key={member.name}
                   name={member.name}
                   initials={member.initials}
-                  className="w-6 h-6 text-[10px] ring-2 ring-white"
+                  className="w-6 h-6 text-[10px] ring-2 ring-surface"
                 />
               ))}
             </div>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-foreground-muted">
               {project.members.map((member) => member.name).join(", ")}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-sm text-gray-600">
+          <div className="flex items-center gap-1.5 text-sm text-foreground-muted">
             <CalendarIcon />
             Due {formatDate(project.dueDate)}
           </div>
@@ -101,7 +101,7 @@ export function ProjectDetail({
             {project.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
+                className="inline-flex items-center rounded-full bg-surface-subtle px-2 py-0.5 text-xs font-medium text-foreground-muted"
               >
                 {tag}
               </span>
@@ -112,8 +112,8 @@ export function ProjectDetail({
 
       {/* Tasks */}
       <div className="mt-6">
-        <h2 className="mb-3 text-base font-semibold text-gray-900">
-          Tasks <span className="font-normal text-gray-400">{tasks.length}</span>
+        <h2 className="mb-3 text-base font-semibold text-foreground">
+          Tasks <span className="font-normal text-foreground-faint">{tasks.length}</span>
         </h2>
         <TaskList tasks={tasks} fields={DEFAULT_VISIBLE_FIELDS} onSelect={onSelectTask} />
       </div>

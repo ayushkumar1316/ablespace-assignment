@@ -37,4 +37,5 @@ export const COLOR_MODE_OPTIONS: {
   { value: "black", label: "Black", hex: ACCENT_COLORS.black },
 ];
 
+export const THEME_STORAGE_KEY = "ablespace:theme";
 export const COLOR_MODE_STORAGE_KEY = "ablespace:color-mode";

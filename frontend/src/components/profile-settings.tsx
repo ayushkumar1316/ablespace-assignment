@@ -19,15 +19,15 @@ export function ProfileSettings() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <h1 className="text-lg font-semibold text-gray-900">Settings</h1>
-      <p className="mt-0.5 text-sm text-gray-500">
+      <h1 className="text-lg font-semibold text-foreground">Settings</h1>
+      <p className="mt-0.5 text-sm text-foreground-subtle">
         Manage your profile and workspace.
       </p>
 
       <div className="mt-6 max-w-2xl space-y-6">
-        <section className="rounded-lg border border-gray-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-gray-900">Profile</h2>
-          <p className="mt-0.5 text-sm text-gray-500">
+        <section className="rounded-lg border border-border bg-surface p-5">
+          <h2 className="text-sm font-semibold text-foreground">Profile</h2>
+          <p className="mt-0.5 text-sm text-foreground-subtle">
             Update your personal information.
           </p>
 
@@ -41,7 +41,7 @@ export function ProfileSettings() {
               <div>
                 <label
                   htmlFor="profile-name"
-                  className="text-xs font-medium text-gray-500 uppercase tracking-wide"
+                  className="text-xs font-medium text-foreground-subtle uppercase tracking-wide"
                 >
                   Name
                 </label>
@@ -49,13 +49,13 @@ export function ProfileSettings() {
                   id="profile-name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-border px-3 py-2 text-sm text-foreground-secondary focus:border-accent focus:outline-none"
                 />
               </div>
               <div>
                 <label
                   htmlFor="profile-email"
-                  className="text-xs font-medium text-gray-500 uppercase tracking-wide"
+                  className="text-xs font-medium text-foreground-subtle uppercase tracking-wide"
                 >
                   Email
                 </label>
@@ -64,7 +64,7 @@ export function ProfileSettings() {
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-border px-3 py-2 text-sm text-foreground-secondary focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -80,9 +80,9 @@ export function ProfileSettings() {
           </div>
         </section>
 
-        <section className="rounded-lg border border-gray-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-gray-900">Workspace</h2>
-          <p className="mt-0.5 text-sm text-gray-500">
+        <section className="rounded-lg border border-border bg-surface p-5">
+          <h2 className="text-sm font-semibold text-foreground">Workspace</h2>
+          <p className="mt-0.5 text-sm text-foreground-subtle">
             Manage your workspace membership.
           </p>
           <button

@@ -55,8 +55,8 @@ function MetaCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
-      <h3 className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+    <div className="rounded-lg border border-border bg-surface p-3">
+      <h3 className="mb-2 text-xs font-semibold text-foreground-subtle uppercase tracking-wide">
         {title}
       </h3>
       {children}
@@ -117,7 +117,7 @@ export function TaskDetail({
       <button
         type="button"
         onClick={onBack}
-        className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+        className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-foreground-subtle hover:text-foreground transition-colors"
       >
         <BackIcon />
         {backLabel}
@@ -129,11 +129,11 @@ export function TaskDetail({
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             aria-label="Task title"
-            className="w-full bg-transparent text-2xl font-bold text-gray-900 outline-none"
+            className="w-full bg-transparent text-2xl font-bold text-foreground outline-none"
           />
 
           <div>
-            <h3 className="mb-2 text-sm font-semibold text-gray-900">
+            <h3 className="mb-2 text-sm font-semibold text-foreground">
               Description
             </h3>
             <textarea
@@ -141,21 +141,21 @@ export function TaskDetail({
               onChange={(event) => setDescription(event.target.value)}
               rows={4}
               aria-label="Description"
-              className="w-full resize-none rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
+              className="w-full resize-none rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground-secondary focus:border-accent focus:outline-none"
             />
           </div>
 
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-gray-900">
+            <h3 className="mb-3 text-sm font-semibold text-foreground">
               Subtasks{" "}
-              <span className="font-normal text-gray-400">
+              <span className="font-normal text-foreground-faint">
                 {doneCount}/{subtasks.length}
               </span>
             </h3>
             <ul className="space-y-1">
               {subtasks.map((subtask) => (
                 <li key={subtask.id}>
-                  <label className="flex cursor-pointer items-start gap-2.5 rounded-md px-2 py-1.5 hover:bg-gray-50">
+                  <label className="flex cursor-pointer items-start gap-2.5 rounded-md px-2 py-1.5 hover:bg-surface-muted">
                     <input
                       type="checkbox"
                       checked={subtask.done}
@@ -165,8 +165,8 @@ export function TaskDetail({
                     <span
                       className={`text-sm ${
                         subtask.done
-                          ? "text-gray-400 line-through"
-                          : "text-gray-700"
+                          ? "text-foreground-faint line-through"
+                          : "text-foreground-secondary"
                       }`}
                     >
                       {subtask.title}
@@ -178,7 +178,7 @@ export function TaskDetail({
           </div>
 
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-gray-900">
+            <h3 className="mb-3 text-sm font-semibold text-foreground">
               Activity
             </h3>
             <ul className="space-y-4">
@@ -190,11 +190,11 @@ export function TaskDetail({
                     className="w-8 h-8 text-xs"
                   />
                   <div className="min-w-0">
-                    <p className="text-sm text-gray-900">
+                    <p className="text-sm text-foreground">
                       <span className="font-medium">{item.author}</span>{" "}
-                      <span className="text-gray-500">{item.text}</span>
+                      <span className="text-foreground-subtle">{item.text}</span>
                     </p>
-                    <p className="mt-0.5 text-xs text-gray-400">
+                    <p className="mt-0.5 text-xs text-foreground-faint">
                       {formatActivityTime(item.createdAt)}
                     </p>
                   </div>
@@ -213,13 +213,13 @@ export function TaskDetail({
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Write a comment..."
                 aria-label="Write a comment"
-                className="flex-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-accent focus:outline-none"
+                className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground-secondary focus:border-accent focus:outline-none"
               />
             </form>
           </div>
         </div>
 
-        <aside className="w-full shrink-0 space-y-3 lg:w-72 lg:border-l lg:border-gray-200 lg:pl-6">
+        <aside className="w-full shrink-0 space-y-3 lg:w-72 lg:border-l lg:border-border lg:pl-6">
           <MetaCard title="Status">
             <SelectMenu
               value={status}
@@ -246,7 +246,7 @@ export function TaskDetail({
                 initials={task.assigneeInitials}
                 className="w-7 h-7 text-xs"
               />
-              <span className="text-sm text-gray-700">{task.assignee}</span>
+              <span className="text-sm text-foreground-secondary">{task.assignee}</span>
             </div>
           </MetaCard>
 
@@ -266,7 +266,7 @@ export function TaskDetail({
               {task.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
+                  className="inline-flex items-center rounded-full bg-surface-subtle px-2 py-0.5 text-xs font-medium text-foreground-muted"
                 >
                   {tag}
                 </span>

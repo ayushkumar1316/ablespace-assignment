@@ -31,7 +31,7 @@ function XIcon() {
 function ChevronDownIcon() {
   return (
     <svg
-      className="w-4 h-4 shrink-0 text-gray-400"
+      className="w-4 h-4 shrink-0 text-foreground-faint"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ function MemberSelect({
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="relative z-20 flex w-full items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm text-gray-700 hover:border-gray-300"
+        className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -97,7 +97,7 @@ function MemberSelect({
           />
           <div
             role="listbox"
-            className="absolute left-0 right-0 top-full z-30 mt-1.5 max-h-56 overflow-auto rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+            className="absolute left-0 right-0 top-full z-30 mt-1.5 max-h-56 overflow-auto rounded-lg border border-border bg-surface p-1 shadow-lg"
           >
             {MEMBERS.map((member) => {
               const isSelected = value.includes(member.name);
@@ -108,7 +108,7 @@ function MemberSelect({
                   role="option"
                   aria-selected={isSelected}
                   onClick={() => toggle(member.name)}
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-50"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground-secondary hover:bg-surface-muted"
                 >
                   <input
                     type="checkbox"
@@ -193,12 +193,12 @@ export function AddProjectModal({
   };
 
   const fieldLabel =
-    "text-xs font-medium text-gray-500 uppercase tracking-wide";
+    "text-xs font-medium text-foreground-subtle uppercase tracking-wide";
   const inputClass = (hasError: boolean) =>
-    `mt-1 w-full rounded-md border px-3 py-2 text-sm text-gray-700 focus:outline-none ${
+    `mt-1 w-full rounded-md border px-3 py-2 text-sm text-foreground-secondary focus:outline-none ${
       hasError
         ? "border-red-300 focus:border-red-400"
-        : "border-gray-200 focus:border-accent"
+        : "border-border focus:border-accent"
     }`;
 
   return (
@@ -214,14 +214,14 @@ export function AddProjectModal({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 flex max-h-full w-full max-w-lg flex-col rounded-xl border border-gray-200 bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <h2 className="text-base font-semibold text-gray-900">Add Project</h2>
+      <div className="relative z-10 flex max-h-full w-full max-w-lg flex-col rounded-xl border border-border bg-surface shadow-xl">
+        <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4">
+          <h2 className="text-base font-semibold text-foreground">Add Project</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-md p-1 text-foreground-faint hover:bg-surface-subtle hover:text-foreground-muted"
           >
             <XIcon />
           </button>
@@ -298,11 +298,11 @@ export function AddProjectModal({
             />
           </div>
 
-          <div className="mt-6 flex justify-end gap-2 border-t border-gray-100 pt-4">
+          <div className="mt-6 flex justify-end gap-2 border-t border-border-subtle pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
             >
               Cancel
             </button>
