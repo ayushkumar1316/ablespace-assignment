@@ -65,7 +65,7 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] REST APIs
 
 ## Phase 8 — Frontend ↔ Backend Integration
-- [ ] 8.1 — Replace mock task data
+- [x] 8.1 — Replace mock task data
 - [ ] 8.2 — Task CRUD
 - [ ] 8.3 — Update task integration
 - [ ] 8.4 — Delete task integration
@@ -113,7 +113,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.1 — Replace mock task data**
+**Current phase: Phase 8.2 — Task CRUD**
 
 Next milestone:
 **Phase 8 — Completed**

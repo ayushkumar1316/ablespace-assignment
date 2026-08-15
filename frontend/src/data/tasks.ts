@@ -38,6 +38,7 @@ export interface Task {
   assigneeInitials: string;
   subtasks: Subtask[];
   activity: Activity[];
+  order?: number;
 }
 
 export const STATUSES: { key: TaskStatus; label: string }[] = [

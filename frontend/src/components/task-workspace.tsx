@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { DEFAULT_VISIBLE_FIELDS, TASKS } from "../data/tasks";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DEFAULT_VISIBLE_FIELDS } from "../data/tasks";
 import type { FieldKey, Task, TaskStatus, VisibleFields } from "../data/tasks";
+import { fetchTasks } from "../lib/api";
 import { TopBar } from "./top-bar";
 import { KanbanBoard } from "./kanban-board";
 import { TaskList } from "./task-list";
@@ -40,13 +41,72 @@ function SearchXIcon() {
   );
 }
 
+function ErrorIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M12 3L2 21h20L12 3z" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M12 10v4M12 17h.01" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function LoadingIcon() {
+  return (
+    <svg
+      className="w-5 h-5 animate-spin"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 80" />
+    </svg>
+  );
+}
+
 export function TaskWorkspace() {
-  const [tasks, setTasks] = useState<Task[]>(TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loadState, setLoadState] = useState<"loading" | "error" | "ready">(
+    "loading"
+  );
   const [view, setView] = useState<"board" | "list">("board");
   const [searchQuery, setSearchQuery] = useState("");
   const [fields, setFields] = useState<VisibleFields>(DEFAULT_VISIBLE_FIELDS);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+
+  const loadTasks = useCallback(async () => {
+    try {
+      const loaded = await fetchTasks();
+      setTasks(loaded);
+      setLoadState("ready");
+    } catch {
+      setLoadState("error");
+    }
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchTasks()
+      .then((loaded) => {
+        if (cancelled) return;
+        setTasks(loaded);
+        setLoadState("ready");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLoadState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const setField = (key: FieldKey, value: boolean) => {
     setFields((prev) => ({ ...prev, [key]: value }));
@@ -114,7 +174,31 @@ export function TaskWorkspace() {
           />
 
           <div className="flex-1 overflow-hidden pt-4">
-            {filteredTasks.length === 0 ? (
+            {loadState === "loading" ? (
+              <EmptyState
+                icon={<LoadingIcon />}
+                title="Loading tasks…"
+                description="Fetching your tasks from the server."
+              />
+            ) : loadState === "error" ? (
+              <EmptyState
+                icon={<ErrorIcon />}
+                title="Failed to load tasks"
+                description="We couldn't reach the server. Check your connection and try again."
+                action={
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoadState("loading");
+                      void loadTasks();
+                    }}
+                    className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+                  >
+                    Retry
+                  </button>
+                }
+              />
+            ) : filteredTasks.length === 0 ? (
               <EmptyState
                 icon={searchQuery.trim() ? <SearchXIcon /> : <InboxIcon />}
                 title={searchQuery.trim() ? "No results found" : "No tasks yet"}
