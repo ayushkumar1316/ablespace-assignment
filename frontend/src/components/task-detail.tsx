@@ -86,10 +86,12 @@ function MetaCard({
 export function TaskDetail({
   task,
   onBack,
+  onSave,
   backLabel = "All tasks",
 }: {
   task: Task;
   onBack: () => void;
+  onSave?: (changes: Partial<Omit<Task, "id">>) => Promise<void>;
   backLabel?: string;
 }) {
   const [title, setTitle] = useState(task.title);
@@ -101,6 +103,8 @@ export function TaskDetail({
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [activity, setActivity] = useState<Activity[]>(task.activity);
   const [comment, setComment] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   const toggleSubtask = (subtaskId: string) => {
     setSubtasks((prev) =>
@@ -131,8 +135,54 @@ export function TaskDetail({
 
   const doneCount = subtasks.filter((subtask) => subtask.done).length;
 
+  const buildChanges = (): Partial<Omit<Task, "id">> => {
+    const changes: Partial<Omit<Task, "id">> = {};
+    if (title !== task.title) {
+      changes.title = title;
+    }
+    if (description !== task.description) {
+      changes.description = description;
+    }
+    if (status !== task.status) {
+      changes.status = status;
+    }
+    if (priority !== task.priority) {
+      changes.priority = priority;
+    }
+    if (startDate !== task.startDate) {
+      changes.startDate = startDate;
+    }
+    if (endDate !== task.dueDate) {
+      changes.dueDate = endDate;
+    }
+    if (JSON.stringify(subtasks) !== JSON.stringify(task.subtasks)) {
+      changes.subtasks = subtasks;
+    }
+    if (JSON.stringify(activity) !== JSON.stringify(task.activity)) {
+      changes.activity = activity;
+    }
+    return changes;
+  };
+
+  const isDirty = Object.keys(buildChanges()).length > 0;
+
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveError("");
+    try {
+      await onSave?.(buildChanges());
+    } catch (error) {
+      setSaveError(
+        error instanceof Error ? error.message : "Failed to save task."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="flex h-full flex-col">
+      <div className="flex-1 overflow-y-auto">
       <button
         type="button"
         onClick={onBack}
@@ -305,6 +355,30 @@ export function TaskDetail({
           </MetaCard>
         </aside>
       </div>
+      </div>
+
+      {onSave && (
+        <div className="flex items-center justify-end gap-2 border-t border-border bg-surface px-4 py-3">
+          {saveError && (
+            <p className="mr-auto text-xs text-red-600">{saveError}</p>
+          )}
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSave()}
+            disabled={saving || !isDirty}
+            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
