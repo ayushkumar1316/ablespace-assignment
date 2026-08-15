@@ -1,6 +1,7 @@
 "use client";
 
-import { DEFAULT_VISIBLE_FIELDS, TASKS, formatDate } from "../data/tasks";
+import { DEFAULT_VISIBLE_FIELDS, formatDate } from "../data/tasks";
+import type { Task } from "../data/tasks";
 import { PROJECT_STATUS_STYLES } from "../data/projects";
 import type { Project } from "../data/projects";
 import { Avatar } from "./avatar";
@@ -53,14 +54,18 @@ function ClipboardListIcon() {
 
 export function ProjectDetail({
   project,
+  tasks,
   onBack,
   onSelectTask,
 }: {
   project: Project;
+  tasks: Task[];
   onBack: () => void;
   onSelectTask: (taskId: string) => void;
 }) {
-  const tasks = TASKS.filter((task) => project.taskIds.includes(task.id));
+  const projectTasks = tasks.filter((task) =>
+    project.taskIds.includes(task.id)
+  );
 
   return (
     <div className="h-full">
@@ -129,9 +134,9 @@ export function ProjectDetail({
       {/* Tasks */}
       <div className="mt-6">
         <h2 className="mb-3 text-base font-semibold text-foreground">
-          Tasks <span className="font-normal text-foreground-faint">{tasks.length}</span>
+          Tasks <span className="font-normal text-foreground-faint">{projectTasks.length}</span>
         </h2>
-        {tasks.length === 0 ? (
+        {projectTasks.length === 0 ? (
           <EmptyState
             icon={<ClipboardListIcon />}
             title="No tasks yet"
@@ -139,7 +144,7 @@ export function ProjectDetail({
             className="border border-border bg-surface rounded-lg"
           />
         ) : (
-          <TaskList tasks={tasks} fields={DEFAULT_VISIBLE_FIELDS} onSelect={onSelectTask} />
+          <TaskList tasks={projectTasks} fields={DEFAULT_VISIBLE_FIELDS} onSelect={onSelectTask} />
         )}
       </div>
     </div>

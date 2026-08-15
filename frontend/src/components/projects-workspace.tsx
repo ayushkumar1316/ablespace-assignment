@@ -1,17 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DEFAULT_PROJECT_VISIBLE_FIELDS,
   PROJECT_STATUS_STYLES,
-  PROJECTS,
 } from "../data/projects";
 import type {
   Project,
   ProjectFieldKey,
   ProjectVisibleFields,
 } from "../data/projects";
-import { TASKS, formatDate } from "../data/tasks";
+import { formatDate } from "../data/tasks";
+import type { Task } from "../data/tasks";
+import { createProject, fetchProjects, fetchTasks } from "../lib/api";
 import { AddProjectModal } from "./add-project-modal";
 import { Avatar } from "./avatar";
 import { DisplayMenu } from "./display-menu";
@@ -64,6 +65,35 @@ function FolderPlusIcon() {
   );
 }
 
+function ErrorIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M12 3L2 21h20L12 3z" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M12 10v4M12 17h.01" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function LoadingIcon() {
+  return (
+    <svg
+      className="w-5 h-5 animate-spin"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 80" />
+    </svg>
+  );
+}
+
 const FIELD_OPTIONS: { key: ProjectFieldKey; label: string }[] = [
   { key: "status", label: "Status" },
   { key: "members", label: "Members" },
@@ -72,7 +102,11 @@ const FIELD_OPTIONS: { key: ProjectFieldKey; label: string }[] = [
 ];
 
 export function ProjectsWorkspace() {
-  const [projects, setProjects] = useState<Project[]>(PROJECTS);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loadState, setLoadState] = useState<
+    "loading" | "error" | "ready"
+  >("loading");
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
@@ -87,7 +121,41 @@ export function ProjectsWorkspace() {
     setFields((prev) => ({ ...prev, [key]: value }));
   };
 
-  const selectedTask = TASKS.find((task) => task.id === selectedTaskId);
+  const loadProjects = useCallback(async () => {
+    try {
+      const [loadedProjects, loadedTasks] = await Promise.all([
+        fetchProjects(),
+        fetchTasks(),
+      ]);
+      setProjects(loadedProjects);
+      setTasks(loadedTasks);
+      setLoadState("ready");
+    } catch (error) {
+      console.error("Failed to load projects", error);
+      setLoadState("error");
+    }
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([fetchProjects(), fetchTasks()])
+      .then(([loadedProjects, loadedTasks]) => {
+        if (cancelled) return;
+        setProjects(loadedProjects);
+        setTasks(loadedTasks);
+        setLoadState("ready");
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.error("Failed to load projects", error);
+        setLoadState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const selectedTask = tasks.find((task) => task.id === selectedTaskId);
   const selectedProject = projects.find(
     (project) => project.id === selectedProjectId
   );
@@ -104,8 +172,9 @@ export function ProjectsWorkspace() {
     );
   }, [searchQuery, projects]);
 
-  const handleCreateProject = (project: Project) => {
-    setProjects((prev) => [...prev, project]);
+  const handleCreateProject = async (input: Omit<Project, "id">) => {
+    const created = await createProject(input);
+    setProjects((prev) => [...prev, created]);
     setIsAddProjectOpen(false);
   };
 
@@ -126,6 +195,7 @@ export function ProjectsWorkspace() {
       <div className="h-full overflow-y-auto">
         <ProjectDetail
           project={selectedProject}
+          tasks={tasks}
           onBack={() => setSelectedProjectId(null)}
           onSelectTask={setSelectedTaskId}
         />
@@ -165,7 +235,27 @@ export function ProjectsWorkspace() {
       </header>
 
       <div className="flex-1 overflow-hidden pt-4">
-        {filteredProjects.length === 0 ? (
+        {loadState === "loading" ? (
+          <EmptyState icon={<LoadingIcon />} title="Loading projects…" />
+        ) : loadState === "error" ? (
+          <EmptyState
+            icon={<ErrorIcon />}
+            title="Failed to load projects"
+            description="Something went wrong while loading your projects."
+            action={
+              <button
+                type="button"
+                onClick={() => {
+                  setLoadState("loading");
+                  void loadProjects();
+                }}
+                className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+              >
+                Retry
+              </button>
+            }
+          />
+        ) : filteredProjects.length === 0 ? (
           <EmptyState
             icon={searchQuery.trim() ? <SearchXIcon /> : <FolderPlusIcon />}
             title={searchQuery.trim() ? "No results found" : "No projects yet"}

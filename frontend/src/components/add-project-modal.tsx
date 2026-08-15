@@ -139,7 +139,7 @@ export function AddProjectModal({
   onCreate,
 }: {
   onClose: () => void;
-  onCreate: (project: Project) => void;
+  onCreate: (project: Omit<Project, "id">) => Promise<void>;
 }) {
   const [name, setName] = useState("");
   const [status, setStatus] = useState<ProjectStatus>("active");
@@ -149,6 +149,8 @@ export function AddProjectModal({
   const [errors, setErrors] = useState<{ name?: string; members?: string }>(
     {}
   );
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -160,7 +162,7 @@ export function AddProjectModal({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const nextErrors: { name?: string; members?: string } = {};
     if (!name.trim()) {
@@ -174,22 +176,31 @@ export function AddProjectModal({
       return;
     }
 
-    onCreate({
-      id: `p-${Date.now()}`,
-      name: name.trim(),
-      description: "",
-      status,
-      tags: labels
-        .split(",")
-        .map((label) => label.trim())
-        .filter(Boolean),
-      dueDate,
-      members: members.map((memberName) => {
-        const member = MEMBERS.find((entry) => entry.name === memberName);
-        return { name: memberName, initials: member?.initials ?? "" };
-      }),
-      taskIds: [],
-    });
+    setSaving(true);
+    setSubmitError("");
+    try {
+      await onCreate({
+        name: name.trim(),
+        description: "",
+        status,
+        tags: labels
+          .split(",")
+          .map((label) => label.trim())
+          .filter(Boolean),
+        dueDate,
+        members: members.map((memberName) => {
+          const member = MEMBERS.find((entry) => entry.name === memberName);
+          return { name: memberName, initials: member?.initials ?? "" };
+        }),
+        taskIds: [],
+      });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to create project."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const fieldLabel =
@@ -300,20 +311,25 @@ export function AddProjectModal({
           </div>
         </form>
 
-        <div className="flex justify-end gap-2 border-t border-border-subtle px-5 py-4">
+        <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-5 py-4">
+          {submitError && (
+            <p className="mr-auto text-xs text-red-600">{submitError}</p>
+          )}
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+            disabled={saving}
+            className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             type="submit"
             form="add-project-form"
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
+            disabled={saving}
+            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Create Project
+            {saving ? "Creating…" : "Create Project"}
           </button>
         </div>
       </div>

@@ -70,7 +70,7 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.3 — Update task integration
 - [x] 8.4 — Delete task integration
 - [x] 8.5 — Task reorder persistence
-- [ ] 8.6 — Project CRUD
+- [x] 8.6 — Project CRUD
 - [ ] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
 - [ ] 8.8 — Search/filter persistence
 - [ ] 8.9 — Profile/preferences persistence
@@ -113,7 +113,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.6 — Project CRUD**
+**Current phase: Phase 8.7 — Theme/color preference persistence**
 
 Next milestone:
 **Phase 8 — Completed**
@@ -142,6 +142,7 @@ The Figma docs are preserved as historical research; these are the decisions we 
   implemented client-only; persisting to the API is deferred to Phase 8.9.
 - **Mock data residue**: `frontend/src/data/tasks.ts` still exports the original
   mock `TASKS` array and `data/projects.ts` exports `PROJECTS`. The task/project
-  workspaces currently render these mock arrays directly; replacing them with
-  API-loaded data is Phase 8.1 and 8.6. `frontend/src/lib/api.ts` (untracked)
-  contains the complete API client used by the wiring phases.
+  workspaces load data from the API (Phase 8.1–8.6); the mock arrays are kept as
+  reference seed data and for potential future offline use.
+  `frontend/src/lib/api.ts` (untracked) contains the complete API client used by
+  the wiring phases.
