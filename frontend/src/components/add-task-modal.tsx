@@ -47,7 +47,7 @@ export function AddTaskModal({
   onCreate,
 }: {
   onClose: () => void;
-  onCreate: (task: Task) => void;
+  onCreate: (task: Omit<Task, "id">) => Promise<void>;
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -60,6 +60,8 @@ export function AddTaskModal({
   const [errors, setErrors] = useState<{ title?: string; assignee?: string }>(
     {}
   );
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -71,7 +73,7 @@ export function AddTaskModal({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const nextErrors: { title?: string; assignee?: string } = {};
     if (!title.trim()) {
@@ -87,31 +89,40 @@ export function AddTaskModal({
 
     const selectedMember = MEMBERS.find((member) => member.name === assignee);
 
-    onCreate({
-      id: `t-${Date.now()}`,
-      title: title.trim(),
-      description: description.trim(),
-      status,
-      priority,
-      tags: labels
-        .split(",")
-        .map((label) => label.trim())
-        .filter(Boolean),
-      startDate,
-      dueDate,
-      assignee,
-      assigneeInitials: selectedMember?.initials ?? "",
-      subtasks: [],
-      activity: [
-        {
-          id: `a-${Date.now()}`,
-          author: CURRENT_USER.name,
-          authorInitials: CURRENT_USER.initials,
-          text: "created this task",
-          createdAt: new Date().toISOString().slice(0, 16),
-        },
-      ],
-    });
+    setSaving(true);
+    setSubmitError("");
+    try {
+      await onCreate({
+        title: title.trim(),
+        description: description.trim(),
+        status,
+        priority,
+        tags: labels
+          .split(",")
+          .map((label) => label.trim())
+          .filter(Boolean),
+        startDate,
+        dueDate,
+        assignee,
+        assigneeInitials: selectedMember?.initials ?? "",
+        subtasks: [],
+        activity: [
+          {
+            id: `a-${Date.now()}`,
+            author: CURRENT_USER.name,
+            authorInitials: CURRENT_USER.initials,
+            text: "created this task",
+            createdAt: new Date().toISOString().slice(0, 16),
+          },
+        ],
+      });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to create task."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const fieldLabel =
@@ -267,7 +278,10 @@ export function AddTaskModal({
           </div>
         </form>
 
-        <div className="flex justify-end gap-2 border-t border-border-subtle px-5 py-4">
+        <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-5 py-4">
+          {submitError && (
+            <p className="mr-auto text-xs text-red-600">{submitError}</p>
+          )}
           <button
             type="button"
             onClick={onClose}
@@ -278,9 +292,10 @@ export function AddTaskModal({
           <button
             type="submit"
             form="add-task-form"
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors"
+            disabled={saving}
+            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Create Task
+            {saving ? "Creating…" : "Create Task"}
           </button>
         </div>
       </div>

@@ -66,7 +66,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Phase 8 — Frontend ↔ Backend Integration
 - [x] 8.1 — Replace mock task data
-- [ ] 8.2 — Task CRUD
+- [x] 8.2 — Task CRUD
 - [ ] 8.3 — Update task integration
 - [ ] 8.4 — Delete task integration
 - [ ] 8.5 — Task reorder persistence
@@ -113,7 +113,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.2 — Task CRUD**
+**Current phase: Phase 8.3 — Update task integration**
 
 Next milestone:
 **Phase 8 — Completed**
