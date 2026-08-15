@@ -2,6 +2,13 @@
 
 *Based on Gemini analysis of 13 Figma screenshots, combined with structural reverse engineering from Figma file inspection. All items marked with confidence level: HIGH / MEDIUM / LOW.*
 
+> **As-of-creation note**: this document records the design research produced when the
+> 13 screenshots were analyzed. It is intentionally preserved unchanged as a design
+> source of truth — VERIFIED / INFERRED / UNKNOWN and confidence levels are intact.
+> Implementation status (Phases 1–8.7 complete, current: Phase 8.8) is tracked in
+> `docs/IMPLEMENTATION_ROADMAP.md`. The Git-status and byte-size statements in the
+> sections below reflect the repository at creation time, not its current state.
+
 ## 1. Complete Screen Map
 
 ### Screen 1: Login Page
@@ -291,7 +298,7 @@
 - Selection persists across refresh (localStorage)
 
 ### Current Implementation Status:
-- CSS variables in `globals.scss` for light/dark theme
+- CSS variables in `globals.css` for light/dark theme
 - Light mode: background #fff, foreground #171717
 - Dark mode: background #0a0a0a, foreground #ededed
 - **Confidence**: MEDIUM - structural setup exists, visual application needs verification
@@ -610,6 +617,11 @@
 
 # Git Safety
 
+> **As-of-creation note**: the Git status and commit counts in this section and in the
+> Report below describe the repository when this document was written (2 commits,
+> nothing committed yet). The repository now has many commits and the Figma docs are
+> tracked; see `git log` and `docs/IMPLEMENTATION_ROADMAP.md` for current status.
+
 ## Pre-Commit Verification:
 
 1. **Verify .gitignore** - Ensure .gitignore exists and properly excludes
@@ -641,6 +653,10 @@
 ---
 
 # Report
+
+> **As-of-creation note**: the commit/status statements in this Report reflect the
+> moment the docs were created and are historical (see the note above the Git Safety
+> section). See `docs/IMPLEMENTATION_ROADMAP.md` for current status.
 
 ## Source-of-Truth Files Created:
 1. `docs/FIGMA_VISUAL_SPEC.md` - Visual specification with Gemini screenshot analysis, marked VERIFIED/INFERRED/UNKNOWN with confidence levels

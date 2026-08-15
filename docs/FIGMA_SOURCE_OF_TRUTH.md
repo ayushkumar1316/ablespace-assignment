@@ -2,6 +2,15 @@
 
 *Consolidated design specification combining existing FIGMA_REVERSE_ENGINEERING.md research with Gemini visual analysis from 13 screenshots. All confidence levels: HIGH / MEDIUM / LOW.*
 
+> **As-of-creation note**: this document is the preserved design source of truth from
+> the Figma research phase. VERIFIED / INFERRED / UNKNOWN and confidence levels are
+> intact. Statements that read as status ("TO BE IMPLEMENTED", "Being created now",
+> "No commits made yet", byte sizes, "Recommended First Milestone") are historical —
+> they describe the repository at the time this document was written. Implementation
+> status is tracked in `docs/IMPLEMENTATION_ROADMAP.md` (Phases 1–8.7 complete;
+> current phase: 8.8 — Search/filter persistence). Intentional deviations from this
+> design are recorded in the roadmap's "Intentional Deviations from Figma" section.
+
 ## Preservation Notice
 - **FIGMA_REVERSE_ENGINEERING.md is preserved** exactly as created - not deleted or replaced
 - This document consolidates and references the existing research
@@ -363,6 +372,11 @@
 - Theme/Color mode preference persistence
 - Filter/sort functionality
 
+> **Historical note**: "TO BE IMPLEMENTED" reflects the design phase. As of Phases 7–8
+> these are implemented: task/project CRUD (`/tasks`, `/projects`) and theme/color
+> preference persistence (`/preferences/me`, guest JWT). Filter/sort persistence is
+> in progress (Phase 8.8).
+
 ## 12. Confidence Level Summary
 
 ### HIGH Confidence:
@@ -555,6 +569,11 @@
 - **No source overrides primary source** - all conflicts marked and explained
 
 ## 16. Report Summary
+
+> **Historical note**: this Report (including "Being created now", byte sizes, the Git
+> Status block, and the closing "NEXT: Resolve the 8 decisions" line) describes the
+> document at creation time and is preserved as-is. Current status is in
+> `docs/IMPLEMENTATION_ROADMAP.md`.
 
 ### Source-of-Truth Files Created:
 1. `docs/FIGMA_VISUAL_SPEC.md` - 28,686 bytes (created during this session)
