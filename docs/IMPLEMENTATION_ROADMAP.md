@@ -69,7 +69,7 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.2 — Task CRUD
 - [x] 8.3 — Update task integration
 - [x] 8.4 — Delete task integration
-- [ ] 8.5 — Task reorder persistence
+- [x] 8.5 — Task reorder persistence
 - [ ] 8.6 — Project CRUD
 - [ ] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
 - [ ] 8.8 — Search/filter persistence
@@ -113,7 +113,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.5 — Task reorder persistence**
+**Current phase: Phase 8.6 — Project CRUD**
 
 Next milestone:
 **Phase 8 — Completed**

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { DEFAULT_VISIBLE_FIELDS } from "../data/tasks";
+import { DEFAULT_VISIBLE_FIELDS, STATUSES } from "../data/tasks";
 import type { FieldKey, Task, TaskStatus, VisibleFields } from "../data/tasks";
 import { createTask, deleteTask, fetchTasks, updateTask } from "../lib/api";
 import { TopBar } from "./top-bar";
@@ -67,6 +67,62 @@ function LoadingIcon() {
     >
       <circle cx="12" cy="12" r="9" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 80" />
     </svg>
+  );
+}
+
+function reorderTasks(
+  tasks: Task[],
+  taskId: string,
+  status: TaskStatus,
+  index: number
+): Task[] {
+  const task = tasks.find((item) => item.id === taskId);
+  if (!task) {
+    return tasks;
+  }
+  const without = tasks.filter((item) => item.id !== taskId);
+  const column = without.filter((item) => item.status === status);
+  const clamped = Math.max(0, Math.min(index, column.length));
+  const reordered = [
+    ...column.slice(0, clamped),
+    { ...task, status },
+    ...column.slice(clamped),
+  ];
+  const others = without.filter((item) => item.status !== status);
+  return [...others, ...reordered];
+}
+
+async function persistTaskOrder(
+  previous: Task[],
+  next: Task[]
+): Promise<void> {
+  const prevById = new Map(previous.map((task) => [task.id, task]));
+  const ordered: Task[] = [];
+  for (const { key } of STATUSES) {
+    ordered.push(...next.filter((task) => task.status === key));
+  }
+  const patches: (Partial<Omit<Task, "id">> & { id: string })[] = [];
+  ordered.forEach((task, index) => {
+    const prev = prevById.get(task.id);
+    const patch: Partial<Omit<Task, "id">> = {};
+    if ((task.order ?? -1) !== index) {
+      patch.order = index;
+    }
+    if (prev && prev.status !== task.status) {
+      patch.status = task.status;
+    }
+    if (Object.keys(patch).length > 0) {
+      patches.push({ id: task.id, ...patch });
+    }
+  });
+  if (patches.length === 0) {
+    return;
+  }
+  await Promise.all(
+    patches.map((patch) => {
+      const { id, ...input } = patch;
+      return updateTask(id, input);
+    })
   );
 }
 
@@ -145,23 +201,23 @@ export function TaskWorkspace() {
     setSelectedTaskId(null);
   };
 
-  const handleReorderTask = (taskId: string, status: TaskStatus, index: number) => {
-    setTasks((prev) => {
-      const task = prev.find((item) => item.id === taskId);
-      if (!task) {
-        return prev;
+  const handleReorderTask = async (
+    taskId: string,
+    status: TaskStatus,
+    index: number
+  ) => {
+    const next = reorderTasks(tasks, taskId, status, index);
+    setTasks(next);
+    try {
+      await persistTaskOrder(tasks, next);
+    } catch {
+      try {
+        const serverTasks = await fetchTasks();
+        setTasks(serverTasks);
+      } catch {
+        // keep the optimistic ordering if the server can't be reached
       }
-      const without = prev.filter((item) => item.id !== taskId);
-      const column = without.filter((item) => item.status === status);
-      const clamped = Math.max(0, Math.min(index, column.length));
-      const reordered = [
-        ...column.slice(0, clamped),
-        { ...task, status },
-        ...column.slice(clamped),
-      ];
-      const others = without.filter((item) => item.status !== status);
-      return [...others, ...reordered];
-    });
+    }
   };
 
   return (
