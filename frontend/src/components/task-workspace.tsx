@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DEFAULT_VISIBLE_FIELDS } from "../data/tasks";
 import type { FieldKey, Task, TaskStatus, VisibleFields } from "../data/tasks";
-import { createTask, fetchTasks, updateTask } from "../lib/api";
+import { createTask, deleteTask, fetchTasks, updateTask } from "../lib/api";
 import { TopBar } from "./top-bar";
 import { KanbanBoard } from "./kanban-board";
 import { TaskList } from "./task-list";
@@ -139,6 +139,12 @@ export function TaskWorkspace() {
     );
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId);
+    setTasks((prev) => prev.filter((item) => item.id !== taskId));
+    setSelectedTaskId(null);
+  };
+
   const handleReorderTask = (taskId: string, status: TaskStatus, index: number) => {
     setTasks((prev) => {
       const task = prev.find((item) => item.id === taskId);
@@ -167,6 +173,7 @@ export function TaskWorkspace() {
               task={selectedTask}
               onBack={() => setSelectedTaskId(null)}
               onSave={handleSaveTask}
+              onDelete={handleDeleteTask}
             />
           </div>
         </div>

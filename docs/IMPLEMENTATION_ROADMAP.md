@@ -68,7 +68,7 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.1 — Replace mock task data
 - [x] 8.2 — Task CRUD
 - [x] 8.3 — Update task integration
-- [ ] 8.4 — Delete task integration
+- [x] 8.4 — Delete task integration
 - [ ] 8.5 — Task reorder persistence
 - [ ] 8.6 — Project CRUD
 - [ ] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
@@ -113,7 +113,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.4 — Delete task integration**
+**Current phase: Phase 8.5 — Task reorder persistence**
 
 Next milestone:
 **Phase 8 — Completed**

@@ -66,6 +66,25 @@ function MessageSquareIcon() {
   );
 }
 
+function TrashIcon() {
+  return (
+    <svg
+      className="w-4 h-4"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        d="M3 6h18M8 6V4h8v2m1 0l-1 14H8L7 6M10 11v6M14 11v6"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function MetaCard({
   title,
   children,
@@ -87,11 +106,13 @@ export function TaskDetail({
   task,
   onBack,
   onSave,
+  onDelete,
   backLabel = "All tasks",
 }: {
   task: Task;
   onBack: () => void;
   onSave?: (changes: Partial<Omit<Task, "id">>) => Promise<void>;
+  onDelete?: (taskId: string) => Promise<void>;
   backLabel?: string;
 }) {
   const [title, setTitle] = useState(task.title);
@@ -105,6 +126,7 @@ export function TaskDetail({
   const [comment, setComment] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const toggleSubtask = (subtaskId: string) => {
     setSubtasks((prev) =>
@@ -177,6 +199,25 @@ export function TaskDetail({
       );
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (
+      !onDelete ||
+      !window.confirm("Delete this task? This action cannot be undone.")
+    ) {
+      return;
+    }
+    setDeleting(true);
+    setSaveError("");
+    try {
+      await onDelete(task.id);
+    } catch (error) {
+      setSaveError(
+        error instanceof Error ? error.message : "Failed to delete task."
+      );
+      setDeleting(false);
     }
   };
 
@@ -357,26 +398,41 @@ export function TaskDetail({
       </div>
       </div>
 
-      {onSave && (
-        <div className="flex items-center justify-end gap-2 border-t border-border bg-surface px-4 py-3">
-          {saveError && (
-            <p className="mr-auto text-xs text-red-600">{saveError}</p>
+      {(onSave || onDelete) && (
+        <div className="flex items-center justify-between gap-2 border-t border-border bg-surface px-4 py-3">
+          {onDelete && (
+            <button
+              type="button"
+              onClick={() => void handleDelete()}
+              disabled={deleting || saving}
+              className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm font-medium text-red-600 hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+            >
+              <TrashIcon />
+              {deleting ? "Deleting…" : "Delete"}
+            </button>
           )}
-          <button
-            type="button"
-            onClick={onBack}
-            className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => void handleSave()}
-            disabled={saving || !isDirty}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {saving ? "Saving…" : "Save"}
-          </button>
+          <div className="flex items-center gap-2">
+            {saveError && (
+              <p className="text-xs text-red-600">{saveError}</p>
+            )}
+            <button
+              type="button"
+              onClick={onBack}
+              className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
+            >
+              Cancel
+            </button>
+            {onSave && (
+              <button
+                type="button"
+                onClick={() => void handleSave()}
+                disabled={saving || !isDirty}
+                className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {saving ? "Saving…" : "Save"}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
