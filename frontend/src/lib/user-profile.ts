@@ -13,6 +13,12 @@ export function initialsFromName(name: string): string {
     .join("");
 }
 
+export function getCurrentUser(): { name: string; initials: string } {
+  const profile = getCachedProfile();
+  const name = profile?.name?.trim() || "Guest User";
+  return { name, initials: initialsFromName(name) };
+}
+
 export function subscribeToProfileChange(onChange: () => void): () => void {
   if (typeof window === "undefined") {
     return () => {};

@@ -115,8 +115,8 @@ export function Sidebar({
     getCachedProfile,
     () => null
   );
-  const displayName = profile?.name || "Mandira Datta";
-  const displayInitials = initialsFromName(displayName) || "MD";
+  const displayName = profile?.name || "Guest User";
+  const displayInitials = initialsFromName(displayName) || "GU";
 
   const handleNavigate = (next: Section) => {
     onNavigate(next);

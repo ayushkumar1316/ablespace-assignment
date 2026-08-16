@@ -34,11 +34,9 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ProfileSettings() {
   const [name, setName] = useState(
-    () => getCachedProfile()?.name ?? "Mandira Datta"
+    () => getCachedProfile()?.name ?? "Guest User"
   );
-  const [email, setEmail] = useState(
-    () => getCachedProfile()?.email ?? "mandira@ablespace.app"
-  );
+  const [email, setEmail] = useState(() => getCachedProfile()?.email ?? "");
   const [savedName, setSavedName] = useState(name);
   const [savedEmail, setSavedEmail] = useState(email);
   const [saveState, setSaveState] = useState<

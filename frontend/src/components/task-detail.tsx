@@ -13,8 +13,7 @@ import { DatePicker } from "./date-picker";
 import { PriorityBadge } from "./priority-badge";
 import { SelectMenu } from "./select-menu";
 import type { SelectOption } from "./select-menu";
-
-const CURRENT_USER = { name: "Mandira Datta", initials: "MD" };
+import { getCurrentUser } from "../lib/user-profile";
 
 const PRIORITY_OPTIONS: SelectOption[] = [
   { value: "urgent", label: "Urgent" },
@@ -128,6 +127,8 @@ export function TaskDetail({
   const [saveError, setSaveError] = useState("");
   const [deleting, setDeleting] = useState(false);
 
+  const currentUser = getCurrentUser();
+
   const toggleSubtask = (subtaskId: string) => {
     setSubtasks((prev) =>
       prev.map((subtask) =>
@@ -146,8 +147,8 @@ export function TaskDetail({
     }
     const newActivity: Activity = {
       id: `local-${Date.now()}`,
-      author: CURRENT_USER.name,
-      authorInitials: CURRENT_USER.initials,
+      author: currentUser.name,
+      authorInitials: currentUser.initials,
       text,
       createdAt: new Date().toISOString().slice(0, 16),
     };
@@ -325,8 +326,8 @@ export function TaskDetail({
 
             <form onSubmit={addComment} className="mt-4 flex items-start gap-3">
               <Avatar
-                name={CURRENT_USER.name}
-                initials={CURRENT_USER.initials}
+                name={currentUser.name}
+                initials={currentUser.initials}
                 className="w-8 h-8 text-xs"
               />
               <input

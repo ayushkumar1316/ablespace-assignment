@@ -11,8 +11,7 @@ import { DatePicker } from "./date-picker";
 import { PriorityBadge } from "./priority-badge";
 import { SelectMenu } from "./select-menu";
 import type { SelectOption } from "./select-menu";
-
-const CURRENT_USER = { name: "Mandira Datta", initials: "MD" };
+import { getCurrentUser } from "../lib/user-profile";
 
 const STATUS_OPTIONS: SelectOption[] = STATUSES.map((status) => ({
   value: status.key,
@@ -109,8 +108,8 @@ export function AddTaskModal({
         activity: [
           {
             id: `a-${Date.now()}`,
-            author: CURRENT_USER.name,
-            authorInitials: CURRENT_USER.initials,
+            author: getCurrentUser().name,
+            authorInitials: getCurrentUser().initials,
             text: "created this task",
             createdAt: new Date().toISOString().slice(0, 16),
           },
