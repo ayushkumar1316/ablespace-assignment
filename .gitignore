@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-pnpm-lockfile.yarn-lock/
 
 # Next.js
 .next/
@@ -10,14 +9,15 @@ out/
 *.sqlite
 
 # Environment variables
-.env*
+.env
+.env.*
+!.env.example
 .local*
 
 # Coverage
 coverage/
 
 # TypeScript Project
-*.tsbuildinfo
 *.tsbuildinfo
 
 # Playwright
@@ -28,9 +28,9 @@ coverage/
 .vscode/
 .vscode/.hidden/
 
-# npm/pnpm/yarn lock files
+# npm lock files (project uses npm; yarn.lock/pnpm-lock.yaml ignored if present)
 yarn.lock
-p-lockfile
+pnpm-lock.yaml
 
 # Production
 .DS_Store
