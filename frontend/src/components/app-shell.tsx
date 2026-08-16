@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { Sidebar } from "./sidebar";
 import { Login } from "./login";
@@ -8,7 +8,7 @@ import { ProjectsWorkspace } from "./projects-workspace";
 import { ProfileSettings } from "./profile-settings";
 import { COLOR_MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "../data/preferences";
 import type { ColorMode, Section, ThemeMode } from "../data/preferences";
-import { fetchPreferences, updatePreferences } from "../lib/api";
+import { fetchPreferences, getGuestToken, hasGuestToken, updatePreferences } from "../lib/api";
 import { loadProfile } from "../lib/user-profile";
 
 const COLOR_MODES: ColorMode[] = [
@@ -65,11 +65,12 @@ function applyPreferences(prefs: { theme: ThemeMode; colorMode: ColorMode }) {
 
 export function AppShell({
   children,
-  loginMode,
 }: {
   children: ReactNode;
-  loginMode?: boolean;
 }) {
+  const [authenticated, setAuthenticated] = useState<boolean>(
+    () => hasGuestToken(),
+  );
   const [section, setSection] = useState<Section>("tasks");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const theme = useSyncExternalStore<ThemeMode>(
@@ -148,8 +149,13 @@ export function AppShell({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [sidebarOpen]);
 
-  if (loginMode) {
-    return <Login />;
+  const handleLogin = useCallback(async () => {
+    await getGuestToken();
+    setAuthenticated(true);
+  }, []);
+
+  if (!authenticated) {
+    return <Login onLogin={handleLogin} />;
   }
 
   return (

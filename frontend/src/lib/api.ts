@@ -40,6 +40,14 @@ async function requestJson<T>(
   return res.json() as Promise<T>;
 }
 
+export function hasGuestToken(): boolean {
+  if (guestToken) return true;
+  if (typeof window !== "undefined") {
+    return !!window.localStorage.getItem(GUEST_TOKEN_KEY);
+  }
+  return false;
+}
+
 export async function getGuestToken(): Promise<string> {
   if (guestToken) {
     return guestToken;
