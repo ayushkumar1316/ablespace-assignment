@@ -9,6 +9,7 @@ import { ProfileSettings } from "./profile-settings";
 import { COLOR_MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "../data/preferences";
 import type { ColorMode, Section, ThemeMode } from "../data/preferences";
 import { fetchPreferences, updatePreferences } from "../lib/api";
+import { loadProfile } from "../lib/user-profile";
 
 const COLOR_MODES: ColorMode[] = [
   "amber",
@@ -108,6 +109,18 @@ export function AppShell({
       .catch((error) => {
         if (cancelled) return;
         console.error("Failed to load preferences", error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadProfile()
+      .catch((error) => {
+        if (cancelled) return;
+        console.error("Failed to load profile", error);
       });
     return () => {
       cancelled = true;

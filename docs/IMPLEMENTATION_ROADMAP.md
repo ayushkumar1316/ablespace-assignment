@@ -73,7 +73,7 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.6 — Project CRUD
 - [x] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
 - [x] 8.8 — Search/filter persistence
-- [ ] 8.9 — Profile/preferences persistence
+- [x] 8.9 — Profile/preferences persistence
 
 > **8.7 note — Preferences API:** theme/accent persistence now uses the backend
 > Preferences API (`GET/PATCH /preferences/me`) as the source of truth.
@@ -87,6 +87,14 @@ follows. These choices supersede the open questions in the Figma docs.
 > JSON, wrong types, and unknown keys fall back to defaults while valid booleans
 > are honored. `useSyncExternalStore` + a storage event keep both workspaces in
 > sync across tabs.
+>
+> **8.9 note — Profile persistence:** Profile Settings loads via
+> `GET /users/me` and saves via `PATCH /users/me` with the server response as the
+> source of truth (`frontend/src/lib/api.ts`). The profile is cached under
+> `ablespace:user-profile` (`frontend/src/lib/user-profile.ts`) and the sidebar
+> name/initials subscribe to it via `useSyncExternalStore`, so avatar initials
+> update on save. Existing validation, dirty-state, and saved feedback are kept;
+> failed saves retain the typed form state and show an inline error.
 
 ## Phase 9 — Responsive + Interaction Polish
 - [ ] Desktop QA
@@ -121,7 +129,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.9 — Profile/preferences persistence**
+**Current phase: Phase 8.10**
 
 Next milestone:
 **Phase 8 — Completed**
@@ -147,11 +155,12 @@ The Figma docs are preserved as historical research; these are the decisions we 
   The frontend uses localStorage for flash-free hydration plus the backend
   Preferences API (`GET/PATCH /preferences/me`) as the persistent source of
   truth (Phase 8.7).
-- **Profile persistence**: Figma Screen 13 implies editable profile. The UI is
-  implemented client-only; persisting to the API is deferred to Phase 8.9.
+- **Profile persistence**: Figma Screen 13 implies editable profile. The profile
+  form now persists via `GET/PATCH /users/me` (Phase 8.9); the server response is
+  the source of truth with a localStorage cache for flash-free hydration.
 - **Mock data residue**: `frontend/src/data/tasks.ts` still exports the original
   mock `TASKS` array and `data/projects.ts` exports `PROJECTS`. The task/project
   workspaces load data from the API (Phase 8.1–8.6); the mock arrays are kept as
   reference seed data and for potential future offline use.
-  `frontend/src/lib/api.ts` (untracked) contains the complete API client used by
-  the wiring phases.
+  `frontend/src/lib/api.ts` contains the complete API client used by the wiring
+  phases.

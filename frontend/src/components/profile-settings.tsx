@@ -3,16 +3,13 @@
 import { useEffect, useState } from "react";
 import { Avatar } from "./avatar";
 import { EmptyState } from "./empty-state";
-
-function initialsFromName(name: string): string {
-  return name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("");
-}
+import { updateProfile } from "../lib/api";
+import {
+  cacheProfile,
+  getCachedProfile,
+  initialsFromName,
+  loadProfile,
+} from "../lib/user-profile";
 
 function LogOutIcon() {
   return (
@@ -36,11 +33,17 @@ function LogOutIcon() {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ProfileSettings() {
-  const [name, setName] = useState("Mandira Datta");
-  const [email, setEmail] = useState("mandira@ablespace.app");
+  const [name, setName] = useState(
+    () => getCachedProfile()?.name ?? "Mandira Datta"
+  );
+  const [email, setEmail] = useState(
+    () => getCachedProfile()?.email ?? "mandira@ablespace.app"
+  );
   const [savedName, setSavedName] = useState(name);
   const [savedEmail, setSavedEmail] = useState(email);
-  const [saveState, setSaveState] = useState<"idle" | "saved">("idle");
+  const [saveState, setSaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
   const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
   const [confirmLeave, setConfirmLeave] = useState(false);
   const [leftWorkspace, setLeftWorkspace] = useState(false);
@@ -68,7 +71,31 @@ export function ProfileSettings() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [confirmLeave]);
 
-  const handleSave = () => {
+  useEffect(() => {
+    let cancelled = false;
+    loadProfile()
+      .then((profile) => {
+        if (cancelled) {
+          return;
+        }
+        setName(profile.name);
+        setEmail(profile.email);
+        setSavedName(profile.name);
+        setSavedEmail(profile.email);
+        setSaveState("idle");
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+        console.error("Failed to load profile", error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleSave = async () => {
     const nextErrors: { name?: string; email?: string } = {};
     if (!name.trim()) {
       nextErrors.name = "Name is required.";
@@ -80,9 +107,22 @@ export function ProfileSettings() {
     if (Object.keys(nextErrors).length > 0) {
       return;
     }
-    setSavedName(name.trim());
-    setSavedEmail(email.trim());
-    setSaveState("saved");
+    setSaveState("saving");
+    try {
+      const profile = await updateProfile({
+        name: name.trim(),
+        email: email.trim(),
+      });
+      setName(profile.name);
+      setEmail(profile.email);
+      setSavedName(profile.name);
+      setSavedEmail(profile.email);
+      cacheProfile(profile);
+      setSaveState("saved");
+    } catch (error) {
+      console.error("Failed to save profile", error);
+      setSaveState("error");
+    }
   };
 
   const handleLeave = () => {
@@ -149,7 +189,12 @@ export function ProfileSettings() {
                 <input
                   id="profile-name"
                   value={name}
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={(event) => {
+                    setName(event.target.value);
+                    if (saveState === "error") {
+                      setSaveState("idle");
+                    }
+                  }}
                   className={inputClass(Boolean(errors.name))}
                 />
                 {errors.name && (
@@ -167,7 +212,12 @@ export function ProfileSettings() {
                   id="profile-email"
                   type="email"
                   value={email}
-                  onChange={(event) => setEmail(event.target.value)}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    if (saveState === "error") {
+                      setSaveState("idle");
+                    }
+                  }}
                   className={inputClass(Boolean(errors.email))}
                 />
                 {errors.email && (
@@ -181,13 +231,20 @@ export function ProfileSettings() {
             {saveState === "saved" && (
               <span className="text-sm font-medium text-emerald-600">Saved</span>
             )}
+            {saveState === "error" && (
+              <span className="text-sm font-medium text-red-600">
+                Failed to save. Try again.
+              </span>
+            )}
             <button
               type="button"
-              onClick={handleSave}
-              disabled={!dirty}
+              onClick={() => {
+                void handleSave();
+              }}
+              disabled={!dirty || saveState === "saving"}
               className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Save changes
+              {saveState === "saving" ? "Saving…" : "Save changes"}
             </button>
           </div>
         </section>

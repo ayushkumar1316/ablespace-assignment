@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { SelectMenu } from "./select-menu";
 import type { SelectOption } from "./select-menu";
 import { COLOR_MODE_OPTIONS, THEME_OPTIONS } from "../data/preferences";
 import type { ColorMode, Section, ThemeMode } from "../data/preferences";
+import {
+  getCachedProfile,
+  initialsFromName,
+  subscribeToProfileChange,
+} from "../lib/user-profile";
+import type { UserProfile } from "../lib/api";
 
 function WorkspaceIcon() {
   return (
@@ -104,6 +110,14 @@ export function Sidebar({
 }) {
   const [minimized, setMinimized] = useState(false);
 
+  const profile = useSyncExternalStore<UserProfile | null>(
+    subscribeToProfileChange,
+    getCachedProfile,
+    () => null
+  );
+  const displayName = profile?.name || "Mandira Datta";
+  const displayInitials = initialsFromName(displayName) || "MD";
+
   const handleNavigate = (next: Section) => {
     onNavigate(next);
     onCloseMobile();
@@ -180,10 +194,10 @@ export function Sidebar({
         {/* User Profile Section */}
         <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
           <div className="w-8 h-8 rounded-full bg-surface-inverse text-on-inverse text-xs font-semibold flex items-center justify-center shrink-0">
-            MD
+            {displayInitials}
           </div>
           {!minimized && (
-            <span className="font-medium text-foreground truncate">Mandira Datta</span>
+            <span className="font-medium text-foreground truncate">{displayName}</span>
           )}
           <button
             type="button"
@@ -226,9 +240,9 @@ export function Sidebar({
         >
           <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
             <div className="w-8 h-8 rounded-full bg-surface-inverse text-on-inverse text-xs font-semibold flex items-center justify-center shrink-0">
-              MD
+              {displayInitials}
             </div>
-            <span className="font-medium text-foreground truncate">Mandira Datta</span>
+            <span className="font-medium text-foreground truncate">{displayName}</span>
             <button
               type="button"
               onClick={onCloseMobile}
