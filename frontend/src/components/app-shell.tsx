@@ -8,6 +8,7 @@ import { ProjectsWorkspace } from "./projects-workspace";
 import { ProfileSettings } from "./profile-settings";
 import { COLOR_MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "../data/preferences";
 import type { ColorMode, Section, ThemeMode } from "../data/preferences";
+import { fetchPreferences, updatePreferences } from "../lib/api";
 
 const COLOR_MODES: ColorMode[] = [
   "amber",
@@ -55,6 +56,12 @@ function getColorModeSnapshot(): ColorMode {
     : "blue";
 }
 
+function applyPreferences(prefs: { theme: ThemeMode; colorMode: ColorMode }) {
+  window.localStorage.setItem(THEME_STORAGE_KEY, prefs.theme);
+  window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, prefs.colorMode);
+  window.dispatchEvent(new Event("storage"));
+}
+
 export function AppShell({
   children,
   loginMode,
@@ -78,12 +85,34 @@ export function AppShell({
   const handleThemeChange = (next: ThemeMode) => {
     window.localStorage.setItem(THEME_STORAGE_KEY, next);
     window.dispatchEvent(new Event("storage"));
+    void updatePreferences({ theme: next }).catch((error) => {
+      console.error("Failed to save theme preference", error);
+    });
   };
 
   const handleColorChange = (next: ColorMode) => {
     window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, next);
     window.dispatchEvent(new Event("storage"));
+    void updatePreferences({ colorMode: next }).catch((error) => {
+      console.error("Failed to save color mode preference", error);
+    });
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchPreferences()
+      .then((prefs) => {
+        if (cancelled) return;
+        applyPreferences(prefs);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.error("Failed to load preferences", error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;

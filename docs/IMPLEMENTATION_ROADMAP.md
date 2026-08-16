@@ -71,14 +71,14 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.4 — Delete task integration
 - [x] 8.5 — Task reorder persistence
 - [x] 8.6 — Project CRUD
-- [ ] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
+- [x] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
 - [ ] 8.8 — Search/filter persistence
 - [ ] 8.9 — Profile/preferences persistence
 
-> **8.7 note — Preferences API:** theme/accent persistence is planned to use the
-> backend Preferences API (`GET/PATCH /preferences/me`) in addition to
-> localStorage. localStorage is kept for fast, flash-free hydration; the API is
-> the source of truth for the guest session. Not wired yet — pending 8.7.
+> **8.7 note — Preferences API:** theme/accent persistence now uses the backend
+> Preferences API (`GET/PATCH /preferences/me`) as the source of truth.
+> localStorage remains as a fast, flash-free hydration cache; on app load the
+> saved server values are fetched and merged in.
 
 ## Phase 9 — Responsive + Interaction Polish
 - [ ] Desktop QA
@@ -113,7 +113,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.7 — Theme/color preference persistence**
+**Current phase: Phase 8.8 — Search/filter persistence**
 
 Next milestone:
 **Phase 8 — Completed**
@@ -136,8 +136,9 @@ The Figma docs are preserved as historical research; these are the decisions we 
 - **Drag & Drop library**: Figma docs suggest dnd-kit or hello-pangea/dnd.
   Implementation uses **custom native HTML5 drag & drop** (see Phase 6.6 decision log).
 - **Theme/accent persistence**: Figma docs describe localStorage-only persistence.
-  The frontend currently persists theme/accent to localStorage only; backend
-  Preferences API (`GET/PATCH /preferences/me`) wiring is pending Phase 8.7.
+  The frontend uses localStorage for flash-free hydration plus the backend
+  Preferences API (`GET/PATCH /preferences/me`) as the persistent source of
+  truth (Phase 8.7).
 - **Profile persistence**: Figma Screen 13 implies editable profile. The UI is
   implemented client-only; persisting to the API is deferred to Phase 8.9.
 - **Mock data residue**: `frontend/src/data/tasks.ts` still exports the original
