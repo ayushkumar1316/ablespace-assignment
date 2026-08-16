@@ -51,7 +51,7 @@ follows. These choices supersede the open questions in the Figma docs.
 | 6.3 | Accent Color System | Six semantic accents (Amber/Blue/Pink/Rose/Emerald/Black) via CSS vars `--accent` / `--accent-strong` / `--accent-soft` | `frontend/src/app/globals.css`, `frontend/src/data/preferences.ts` |
 | 6.4 | Color Mode behavior | Accent applies to active navigation, active Board/List state, primary actions, selected/check states, focus rings, date-picker indicators | `globals.css` tokens + sidebar/workspace components |
 | 6.5 | Responsive strategy | Option A — sidebar collapses to overlay drawer below `md`; content reflows; Kanban columns scroll horizontally | `frontend/src/components/app-shell.tsx`, `sidebar.tsx` |
-| 6.6 | Drag & Drop visual states | Custom native HTML5 DnD with hover, dragging (opacity + ring), drop-zone indicator, and ghost preview (not dnd-kit) | `frontend/src/components/kanban-board.tsx`, `task-card.tsx` |
+| 6.6 | Drag & Drop visual states | Custom Pointer Events-based drag (no library, no native HTML5 DnD API) with hover, dragging (opacity + ring), drop-zone indicator, and ghost preview | `frontend/src/components/kanban-board.tsx`, `drag-handle.tsx`, `task-card.tsx` |
 | 6.7 | Empty states | Icon + title + description + CTA for no-tasks / no-projects / search-no-results / error-retry | `frontend/src/components/empty-state.tsx` |
 | 6.8 | Profile detail level | Option A — full settings page: profile (name, email, avatar) + workspace (leave workspace). Client-only for now; persistence is Phase 8.9 | `frontend/src/components/profile-settings.tsx` |
 
@@ -161,7 +161,8 @@ The Figma docs are preserved as historical research; these are the decisions we 
 - **Login branding**: Figma shows a pyramid logo; implementation uses an "LM"
   tile. Secondary button copy is "Continue with Google" vs Figma "Login with Google".
 - **Drag & Drop library**: Figma docs suggest dnd-kit or hello-pangea/dnd.
-  Implementation uses **custom native HTML5 drag & drop** (see Phase 6.6 decision log).
+  Implementation uses **custom Pointer Events-based drag** — no native HTML5
+  DnD API, no third-party library (see Phase 6.6 decision log).
 - **Theme/accent persistence**: Figma docs describe localStorage-only persistence.
   The frontend uses localStorage for flash-free hydration plus the backend
   Preferences API (`GET/PATCH /preferences/me`) as the persistent source of
@@ -175,3 +176,7 @@ The Figma docs are preserved as historical research; these are the decisions we 
   reference seed data and for potential future offline use.
   `frontend/src/lib/api.ts` contains the complete API client used by the wiring
   phases.
+- **JWT secret**: The original implementation used a hardcoded fallback
+  (`ablespace-dev-secret`) when `JWT_SECRET` was unset. This was removed — the
+  backend now fails on startup with a clear error if `JWT_SECRET` is not
+  configured, preventing tokens from being signed with a publicly known value.

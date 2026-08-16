@@ -123,7 +123,7 @@ Defined in `backend/.env.example`:
 |-------------------|-------------------------------|--------------------------------------|
 | `PORT`            | `4000`                        | Backend listen port                  |
 | `MONGODB_URI`     | `mongodb://localhost:27017/ablespace` | MongoDB connection string    |
-| `JWT_SECRET`      | long random string            | JWT signing secret                   |
+| `JWT_SECRET`      | long random string            | JWT signing secret (**required**)    |
 | `JWT_EXPIRES_IN`  | `7d`                          | Guest token lifetime                 |
 | `CORS_ORIGIN`     | `http://localhost:3000`       | Comma-separated allowed origins      |
 
@@ -131,25 +131,28 @@ Never commit `.env` (`.gitignore` excludes `.env*`).
 
 ## API Overview
 
-All routes except `POST /auth/guest` require `Authorization: Bearer <token>`.
+All routes except `POST /auth/guest`, `GET /`, and `GET /health` require
+`Authorization: Bearer <token>`.
 
-| Method | Endpoint            | Description                          |
-|--------|---------------------|--------------------------------------|
-| POST   | `/auth/guest`       | Create a guest user, return `accessToken` + user |
-| GET    | `/tasks`            | List tasks (sorted by `order`)       |
-| GET    | `/tasks/:id`        | Get one task                         |
-| POST   | `/tasks`            | Create a task                        |
-| PATCH  | `/tasks/:id`        | Update a task (status, order, etc.)  |
-| DELETE | `/tasks/:id`        | Delete a task                        |
-| GET    | `/projects`         | List projects                        |
-| GET    | `/projects/:id`     | Get one project                      |
-| POST   | `/projects`         | Create a project                     |
-| PATCH  | `/projects/:id`     | Update a project                     |
-| DELETE | `/projects/:id`     | Delete a project                     |
-| GET    | `/users/me`         | Current user                         |
-| PATCH  | `/users/me`         | Update current user's profile        |
-| GET    | `/preferences/me`   | Get theme + color mode for the user  |
-| PATCH  | `/preferences/me`   | Update theme / color mode            |
+| Method | Endpoint            | Description                          | Auth |
+|--------|---------------------|--------------------------------------|------|
+| POST   | `/auth/guest`       | Create a guest user, return `accessToken` + user | No |
+| GET    | `/`                 | Service info                         | No   |
+| GET    | `/health`           | Health check                         | No   |
+| GET    | `/tasks`            | List tasks (sorted by `order`)       | Yes  |
+| GET    | `/tasks/:id`        | Get one task                         | Yes  |
+| POST   | `/tasks`            | Create a task                        | Yes  |
+| PATCH  | `/tasks/:id`        | Update a task (status, order, etc.)  | Yes  |
+| DELETE | `/tasks/:id`        | Delete a task                        | Yes  |
+| GET    | `/projects`         | List projects                        | Yes  |
+| GET    | `/projects/:id`     | Get one project                      | Yes  |
+| POST   | `/projects`         | Create a project                     | Yes  |
+| PATCH  | `/projects/:id`     | Update a project                     | Yes  |
+| DELETE | `/projects/:id`     | Delete a project                     | Yes  |
+| GET    | `/users/me`         | Current user                         | Yes  |
+| PATCH  | `/users/me`         | Update current user's profile        | Yes  |
+| GET    | `/preferences/me`   | Get theme + color mode for the user  | Yes  |
+| PATCH  | `/preferences/me`   | Update theme / color mode            | Yes  |
 
 Request/response bodies are validated at the API boundary (whitelist + transform).
 
@@ -162,8 +165,10 @@ Request/response bodies are validated at the API boundary (whitelist + transform
 - On later loads the stored token is reused, so the same guest user (and their
   saved preferences/tasks) is used across page refreshes instead of creating a
   new guest every time.
-- Tokens expire after `JWT_EXPIRES_IN` (default `7d`); the frontend then
-  transparently issues a new guest session.
+- Tokens expire after `JWT_EXPIRES_IN` (default `7d`). If the token expires,
+  API calls fail with `401` — there is no automatic re-authentication.
+- A new session can be obtained by clearing `ablespace:guest-token` from
+  `localStorage` and reloading.
 
 ## Theme/Accent Persistence
 
