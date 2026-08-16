@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-const GUEST_STORAGE_KEY = "ablespace:guest-token";
-
 export function Login({ onLogin }: { onLogin: () => Promise<void> }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
