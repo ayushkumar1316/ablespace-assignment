@@ -1,9 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { DEFAULT_VISIBLE_FIELDS, STATUSES } from "../data/tasks";
-import type { FieldKey, Task, TaskStatus, VisibleFields } from "../data/tasks";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { STATUSES } from "../data/tasks";
+import type { FieldKey, Task, TaskStatus } from "../data/tasks";
 import { createTask, deleteTask, fetchTasks, updateTask } from "../lib/api";
+import {
+  DEFAULT_TASK_VIEW_PREFERENCES,
+  loadTaskViewPreferences,
+  saveTaskViewPreferences,
+  subscribeToStorage,
+} from "../lib/view-preferences";
+import type { TaskView, TaskViewPreferences } from "../lib/view-preferences";
 import { TopBar } from "./top-bar";
 import { KanbanBoard } from "./kanban-board";
 import { TaskList } from "./task-list";
@@ -131,11 +138,53 @@ export function TaskWorkspace() {
   const [loadState, setLoadState] = useState<"loading" | "error" | "ready">(
     "loading"
   );
-  const [view, setView] = useState<"board" | "list">("board");
+  const taskViewPrefs = useSyncExternalStore<TaskViewPreferences>(
+    subscribeToStorage,
+    loadTaskViewPreferences,
+    () => DEFAULT_TASK_VIEW_PREFERENCES
+  );
+  const view = taskViewPrefs.view;
+  const fields = taskViewPrefs.fields;
   const [searchQuery, setSearchQuery] = useState("");
-  const [fields, setFields] = useState<VisibleFields>(DEFAULT_VISIBLE_FIELDS);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+
+  const setView = (next: TaskView) => {
+    saveTaskViewPreferences({ ...loadTaskViewPreferences(), view: next });
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  const setField = (key: FieldKey, value: boolean) => {
+    saveTaskViewPreferences({
+      ...loadTaskViewPreferences(),
+      fields: { ...loadTaskViewPreferences().fields, [key]: value },
+    });
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.resolve()
+      .then(() => loadTaskViewPreferences())
+      .then((prefs) => {
+        if (cancelled) return;
+        setSearchQuery(prefs.search);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveTaskViewPreferences({
+        ...loadTaskViewPreferences(),
+        search: searchQuery,
+      });
+      window.dispatchEvent(new Event("storage"));
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const loadTasks = useCallback(async () => {
     try {
@@ -163,10 +212,6 @@ export function TaskWorkspace() {
       cancelled = true;
     };
   }, []);
-
-  const setField = (key: FieldKey, value: boolean) => {
-    setFields((prev) => ({ ...prev, [key]: value }));
-  };
 
   const filteredTasks = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();

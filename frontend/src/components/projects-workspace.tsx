@@ -1,18 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  DEFAULT_PROJECT_VISIBLE_FIELDS,
-  PROJECT_STATUS_STYLES,
-} from "../data/projects";
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { PROJECT_STATUS_STYLES } from "../data/projects";
 import type {
   Project,
   ProjectFieldKey,
-  ProjectVisibleFields,
 } from "../data/projects";
 import { formatDate } from "../data/tasks";
 import type { Task } from "../data/tasks";
 import { createProject, fetchProjects, fetchTasks } from "../lib/api";
+import {
+  DEFAULT_PROJECT_VIEW_PREFERENCES,
+  loadProjectViewPreferences,
+  saveProjectViewPreferences,
+  subscribeToStorage,
+} from "../lib/view-preferences";
+import type { ProjectViewPreferences } from "../lib/view-preferences";
 import { AddProjectModal } from "./add-project-modal";
 import { Avatar } from "./avatar";
 import { DisplayMenu } from "./display-menu";
@@ -112,14 +121,45 @@ export function ProjectsWorkspace() {
   );
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [fields, setFields] = useState<ProjectVisibleFields>(
-    DEFAULT_PROJECT_VISIBLE_FIELDS
+  const projectViewPrefs = useSyncExternalStore<ProjectViewPreferences>(
+    subscribeToStorage,
+    loadProjectViewPreferences,
+    () => DEFAULT_PROJECT_VIEW_PREFERENCES
   );
+  const fields = projectViewPrefs.fields;
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
 
   const setField = (key: ProjectFieldKey, value: boolean) => {
-    setFields((prev) => ({ ...prev, [key]: value }));
+    saveProjectViewPreferences({
+      ...loadProjectViewPreferences(),
+      fields: { ...loadProjectViewPreferences().fields, [key]: value },
+    });
+    window.dispatchEvent(new Event("storage"));
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.resolve()
+      .then(() => loadProjectViewPreferences())
+      .then((prefs) => {
+        if (cancelled) return;
+        setSearchQuery(prefs.search);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveProjectViewPreferences({
+        ...loadProjectViewPreferences(),
+        search: searchQuery,
+      });
+      window.dispatchEvent(new Event("storage"));
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const loadProjects = useCallback(async () => {
     try {

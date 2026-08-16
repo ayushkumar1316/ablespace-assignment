@@ -72,13 +72,21 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.5 — Task reorder persistence
 - [x] 8.6 — Project CRUD
 - [x] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
-- [ ] 8.8 — Search/filter persistence
+- [x] 8.8 — Search/filter persistence
 - [ ] 8.9 — Profile/preferences persistence
 
 > **8.7 note — Preferences API:** theme/accent persistence now uses the backend
 > Preferences API (`GET/PATCH /preferences/me`) as the source of truth.
 > localStorage remains as a fast, flash-free hydration cache; on app load the
 > saved server values are fetched and merged in.
+>
+> **8.8 note — View preference persistence:** task view (Board/List), task/project
+> search, and visible-field settings persist to localStorage under
+> `ablespace:task-view` / `ablespace:project-view` via
+> `frontend/src/lib/view-preferences.ts`. Values are sanitized on read: invalid
+> JSON, wrong types, and unknown keys fall back to defaults while valid booleans
+> are honored. `useSyncExternalStore` + a storage event keep both workspaces in
+> sync across tabs.
 
 ## Phase 9 — Responsive + Interaction Polish
 - [ ] Desktop QA
@@ -113,7 +121,7 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.8 — Search/filter persistence**
+**Current phase: Phase 8.9 — Profile/preferences persistence**
 
 Next milestone:
 **Phase 8 — Completed**
