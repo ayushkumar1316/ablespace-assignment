@@ -5,7 +5,7 @@
 > **As-of-creation note**: this document records the design research produced when the
 > 13 screenshots were analyzed. It is intentionally preserved unchanged as a design
 > source of truth — VERIFIED / INFERRED / UNKNOWN and confidence levels are intact.
-> Implementation status (Phases 1–8.7 complete, current: Phase 8.8) is tracked in
+> Implementation status (Phases 1–8.10 complete, current: Phase 9) is tracked in
 > `docs/IMPLEMENTATION_ROADMAP.md`. The Git-status and byte-size statements in the
 > sections below reflect the repository at creation time, not its current state.
 

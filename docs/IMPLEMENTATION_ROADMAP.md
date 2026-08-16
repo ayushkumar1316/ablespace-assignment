@@ -74,6 +74,7 @@ follows. These choices supersede the open questions in the Figma docs.
 - [x] 8.7 — Theme/color preference persistence (localStorage + Preferences API)
 - [x] 8.8 — Search/filter persistence
 - [x] 8.9 — Profile/preferences persistence
+- [x] 8.10 — Final integration QA (regression + fixes + docs)
 
 > **8.7 note — Preferences API:** theme/accent persistence now uses the backend
 > Preferences API (`GET/PATCH /preferences/me`) as the source of truth.
@@ -95,6 +96,16 @@ follows. These choices supersede the open questions in the Figma docs.
 > name/initials subscribe to it via `useSyncExternalStore`, so avatar initials
 > update on save. Existing validation, dirty-state, and saved feedback are kept;
 > failed saves retain the typed form state and show an inline error.
+>
+> **8.10 note — Final integration QA:** full regression passed (tasks CRUD + drag
+> + search + display fields, projects CRUD, profile, theme/color persistence,
+> responsive matrix, error states). One bug fixed and committed as `aa4dc75`:
+> task activity/comments were attributed to a hardcoded `CURRENT_USER`; they now
+> use `getCurrentUser()` (`frontend/src/lib/user-profile.ts`). Known limitations
+> (documented, not blocking): login is not a real gate — `layout.tsx` renders
+> `AppShell` directly and the app auto-authenticates as guest; `updateProject` /
+> `deleteProject` exist in `frontend/src/lib/api.ts` but are not wired to any UI
+> component; add-subtask UI does not exist (only toggling existing subtasks).
 
 ## Phase 9 — Responsive + Interaction Polish
 - [ ] Desktop QA
@@ -129,10 +140,10 @@ follows. These choices supersede the open questions in the Figma docs.
 
 ## Current Position
 
-**Current phase: Phase 8.10**
+**Current phase: Phase 9 — Responsive + Interaction Polish**
 
 Next milestone:
-**Phase 8 — Completed**
+**Phase 9 — Completed**
 
 Do not implement or mark future phases complete until their actual work is finished and verified.
 

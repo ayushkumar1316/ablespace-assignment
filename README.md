@@ -191,7 +191,8 @@ Request/response bodies are validated at the API boundary (whitelist + transform
 ## Documentation
 
 - `docs/IMPLEMENTATION_ROADMAP.md` — phase status, Phase 6 decision log, and
-  intentional deviations from Figma. Current phase: **8.8 — Search/filter persistence**.
+  intentional deviations from Figma. Current phase: **Phase 9 — Responsive +
+  Interaction Polish** (Phase 8 — Frontend ↔ Backend Integration is complete).
 - `docs/FIGMA_SOURCE_OF_TRUTH.md`, `docs/FIGMA_VISUAL_SPEC.md`,
   `docs/FIGMA_REVERSE_ENGINEERING.md` — preserved design source-of-truth research
   (historical as-of-creation notes added; design findings unchanged).

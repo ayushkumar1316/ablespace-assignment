@@ -3,7 +3,7 @@
 > **Preservation note**: this is the original structural research from the Figma file
 > inspection, preserved exactly as created (design source of truth). It describes the
 > Figma file, not the current implementation. Implementation status is tracked in
-> `docs/IMPLEMENTATION_ROADMAP.md` (Phases 1–8.7 complete; current: Phase 8.8), and
+> `docs/IMPLEMENTATION_ROADMAP.md` (Phases 1–8.10 complete; current: Phase 9), and
 > intentional deviations are listed in that roadmap's "Intentional Deviations from Figma".
 
 ## 1. Screens

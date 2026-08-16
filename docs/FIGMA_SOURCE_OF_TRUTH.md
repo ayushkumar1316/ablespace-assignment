@@ -7,8 +7,8 @@
 > intact. Statements that read as status ("TO BE IMPLEMENTED", "Being created now",
 > "No commits made yet", byte sizes, "Recommended First Milestone") are historical —
 > they describe the repository at the time this document was written. Implementation
-> status is tracked in `docs/IMPLEMENTATION_ROADMAP.md` (Phases 1–8.7 complete;
-> current phase: 8.8 — Search/filter persistence). Intentional deviations from this
+> status is tracked in `docs/IMPLEMENTATION_ROADMAP.md` (Phases 1–8.10 complete,
+> including 8.10 final integration QA; current phase: Phase 9). Intentional deviations from this
 > design are recorded in the roadmap's "Intentional Deviations from Figma" section.
 
 ## Preservation Notice
@@ -374,8 +374,9 @@
 
 > **Historical note**: "TO BE IMPLEMENTED" reflects the design phase. As of Phases 7–8
 > these are implemented: task/project CRUD (`/tasks`, `/projects`) and theme/color
-> preference persistence (`/preferences/me`, guest JWT). Filter/sort persistence is
-> in progress (Phase 8.8).
+> preference persistence (`/preferences/me`, guest JWT). Filter/sort persistence
+> and profile/preferences persistence completed in Phases 8.8–8.9; final
+> integration QA completed in Phase 8.10.
 
 ## 12. Confidence Level Summary
 
