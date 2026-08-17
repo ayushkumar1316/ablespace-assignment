@@ -2,7 +2,8 @@ import type { Task, TaskPriority, TaskStatus } from "../data/tasks";
 import type { Project, ProjectStatus } from "../data/projects";
 import type { ThemeMode, ColorMode } from "../data/preferences";
 
-export const API_BASE_URL = "http://localhost:4000";
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 const GUEST_TOKEN_KEY = "ablespace:guest-token";
 
