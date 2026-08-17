@@ -50,3 +50,4 @@ dist/
 *.log
 extract_urls.py
 figma_initial_snapshot.md
+AbleSpace_Part1_Implementation_Plan.md
