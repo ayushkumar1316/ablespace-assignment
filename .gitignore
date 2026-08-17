@@ -43,3 +43,10 @@ dist/
 
 # Screenshots / Figma references
 *.png
+
+# Dev / local files
+.continue/
+*.docx
+*.log
+extract_urls.py
+figma_initial_snapshot.md
