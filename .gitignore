@@ -40,3 +40,6 @@ yarn-debug.log
 # NestJS
 dist/
 *.local
+
+# Screenshots / Figma references
+*.png
