@@ -12,6 +12,29 @@ Figma design as the visual source of truth.
 - Light/dark themes and six accent color modes (Amber, Blue, Pink, Rose, Emerald, Black).
 - Guest login with an auto-issued JWT session.
 
+## Live Deployment
+
+| Layer | URL |
+|-------|-----|
+| Frontend | https://ablespace-assignment-ochre.vercel.app |
+| Backend | https://ablespace-api-65gc.onrender.com |
+| Database | MongoDB Atlas (M0 free tier) |
+
+## Production Architecture
+
+```
+┌──────────────┐      ┌──────────────────┐      ┌────────────────┐
+│   Frontend   │ ───► │     Backend      │ ───► │    Database    │
+│   Vercel     │      │  Render/NestJS   │      │  MongoDB Atlas │
+│  Next.js 16  │      │  NestJS 11       │      │   Mongoose 9   │
+└──────────────┘      └──────────────────┘      └────────────────┘
+```
+
+- **Vercel** hosts the Next.js frontend (static + client-side rendering).
+- **Render** hosts the NestJS REST API (free tier, auto-deploys from GitHub).
+- **MongoDB Atlas** provides the cloud database (M0 free tier, 512 MB).
+- CORS is configured to allow requests only from the deployed frontend origin.
+
 ## Tech Stack
 
 | Layer      | Technology                                    |
@@ -42,11 +65,12 @@ ablespace-assignment/
 │       ├── data/          # types + constants (and residual mock arrays)
 │       └── lib/           # API client (api.ts)
 ├── docs/
-│   ├── IMPLEMENTATION_ROADMAP.md   # phase status + decision log + deviations
-│   ├── FIGMA_SOURCE_OF_TRUTH.md    # design source of truth (historical)
-│   ├── FIGMA_VISUAL_SPEC.md        # design source of truth (historical)
-│   └── FIGMA_REVERSE_ENGINEERING.md# original Figma research (preserved)
-└── AbleSpace_Part1_Implementation_Plan.md  # original build plan (historical)
+│   ├── IMPLEMENTATION_ROADMAP.md     # phase status + decision log + deviations
+│   ├── DEPLOYMENT_READINESS.md       # deployment report
+│   ├── FIGMA_SOURCE_OF_TRUTH.md      # design source of truth (historical)
+│   ├── FIGMA_VISUAL_SPEC.md          # design source of truth (historical)
+│   └── FIGMA_REVERSE_ENGINEERING.md  # original Figma research (preserved)
+└── .gitignore
 ```
 
 ## Local Setup
@@ -193,12 +217,49 @@ Request/response bodies are validated at the API boundary (whitelist + transform
   (linking `taskIds` to the seeded tasks).
 - Seeding is idempotent by design.
 
+## Known Limitations
+
+- **No add-subtask UI**: subtasks can be toggled (checked/unchecked) in the task
+  detail view, but there is no UI to create new subtasks.
+- **No project update/delete from UI**: `updateProject` and `deleteProject` exist
+  in the API client (`frontend/src/lib/api.ts`) but are not wired to any UI
+  component.
+- **Guest-only authentication**: there is no real login gate — the app
+  auto-authenticates as a guest user on first visit. Google OAuth was omitted
+  per assignment scope.
+- **No automatic token refresh**: JWT tokens expire after 7 days with no
+  automatic re-authentication. Users must clear localStorage to obtain a new
+  session.
+- **Seed data on first boot**: a fresh database is seeded with sample tasks and
+  projects on the first successful startup. This is intended for demo/assignment
+  purposes.
+- **Render cold starts**: the free-tier Render service sleeps after inactivity,
+  causing a 30–60 second delay on the first request.
+
+## Intentional Deviations from Figma
+
+These are conscious decisions made during implementation. The Figma docs are
+preserved as historical research; these are the decisions we made.
+
+| Area | Figma Design | Our Implementation | Rationale |
+|------|-------------|-------------------|-----------|
+| **Login** | "Continue as Guest" (black button) + "Login with Google" | Guest-only login; Google OAuth omitted | Assignment scope — no OAuth provider configured |
+| **Font** | "likely Inter" (inferred) | Geist / Geist Mono (`next/font/google`) | Better developer experience, modern typeface |
+| **Login branding** | Pyramid logo | "AS" tile (blue rounded square) | Custom branding for AbleSpace identity |
+| **Drag & Drop** | dnd-kit or hello-pangea/dnd suggested | Custom Pointer Events-based drag (no library) | Zero dependencies, full control over behavior |
+| **Theme/accent persistence** | localStorage only | localStorage + backend Preferences API | Persistence across devices/sessions via server |
+| **Profile persistence** | Implied editable profile | Full `GET/PATCH /users/me` with localStorage cache | Server as source of truth, flash-free hydration |
+| **Primary CTA color** | Black (#000000) solid buttons | Accent color (blue by default) | Consistent with accent color system |
+| **Add Task/Project UI** | Not designed in Figma | Modal with full field set | Required for CRUD functionality |
+| **Responsive design** | Not in Figma (desktop only) | Sidebar collapses to overlay drawer below `md` | Required for mobile support |
+| **Empty states** | Not designed in Figma | Icon + title + description + CTA | Better UX than blank screens |
+
 ## Documentation
 
-- `docs/IMPLEMENTATION_ROADMAP.md` — phase status, Phase 6 decision log, and
-  intentional deviations from Figma. Current phase: **Phase 9 — Responsive +
-  Interaction Polish** (Phase 8 — Frontend ↔ Backend Integration is complete).
+- `docs/IMPLEMENTATION_ROADMAP.md` — phase status (Phase 10 — COMPLETE),
+  Phase 6 decision log, and intentional deviations from Figma.
+- `docs/DEPLOYMENT_READINESS.md` — deployment report with architecture,
+  environment variables, and production checklist.
 - `docs/FIGMA_SOURCE_OF_TRUTH.md`, `docs/FIGMA_VISUAL_SPEC.md`,
   `docs/FIGMA_REVERSE_ENGINEERING.md` — preserved design source-of-truth research
   (historical as-of-creation notes added; design findings unchanged).
-- `AbleSpace_Part1_Implementation_Plan.md` — original build plan (historical).
