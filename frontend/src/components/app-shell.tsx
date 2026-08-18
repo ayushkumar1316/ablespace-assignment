@@ -86,15 +86,9 @@ export function AppShell({
 }: {
   children: ReactNode;
 }) {
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
-  const [authChecked, setAuthChecked] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(() => hasGuestToken());
   const [section, setSection] = useState<Section>("tasks");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    setAuthenticated(hasGuestToken());
-    setAuthChecked(true);
-  }, []);
   const theme = useSyncExternalStore<ThemeMode>(
     subscribeToStorage,
     getThemeSnapshot,
@@ -176,7 +170,7 @@ export function AppShell({
     setAuthenticated(true);
   }, []);
 
-  if (!authChecked || !authenticated) {
+  if (!authenticated) {
     return <Login onLogin={handleLogin} />;
   }
 
