@@ -9,6 +9,7 @@ import type {
   TaskStatus,
 } from "../data/tasks";
 import { Avatar } from "./avatar";
+import { ConfirmDialog } from "./confirm-dialog";
 import { DatePicker } from "./date-picker";
 import { PriorityBadge } from "./priority-badge";
 import { SelectMenu } from "./select-menu";
@@ -126,6 +127,7 @@ export function TaskDetail({
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const currentUser = getCurrentUser();
 
@@ -204,12 +206,8 @@ export function TaskDetail({
   };
 
   const handleDelete = async () => {
-    if (
-      !onDelete ||
-      !window.confirm("Delete this task? This action cannot be undone.")
-    ) {
-      return;
-    }
+    if (!onDelete) return;
+    setShowDeleteConfirm(false);
     setDeleting(true);
     setSaveError("");
     try {
@@ -404,7 +402,7 @@ export function TaskDetail({
           {onDelete && (
             <button
               type="button"
-              onClick={() => void handleDelete()}
+              onClick={() => setShowDeleteConfirm(true)}
               disabled={deleting || saving}
               className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm font-medium text-red-600 hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
             >
@@ -436,6 +434,15 @@ export function TaskDetail({
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        title="Delete this task?"
+        description="This action cannot be undone. The task and all its data will be permanently removed."
+        confirmLabel="Delete"
+        onConfirm={() => void handleDelete()}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </div>
   );
 }

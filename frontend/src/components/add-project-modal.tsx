@@ -64,6 +64,7 @@ function MemberSelect({
   onChange: (members: string[]) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
 
   const toggle = (name: string) => {
     onChange(
@@ -73,11 +74,24 @@ function MemberSelect({
     );
   };
 
+  const handleClose = () => setClosing(true);
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [closing]);
+
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => {
+          if (open) { handleClose(); } else { setOpen(true); setClosing(false); }
+        }}
         className="relative z-20 flex w-full items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground-secondary hover:border-border-strong"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -92,12 +106,14 @@ function MemberSelect({
         <>
           <div
             className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             aria-hidden="true"
           />
           <div
             role="listbox"
-            className="absolute left-0 right-0 top-full z-30 mt-1.5 max-h-56 overflow-auto rounded-lg border border-border bg-surface p-1 shadow-lg"
+            className={`absolute left-0 right-0 top-full z-30 mt-1.5 max-h-56 overflow-auto rounded-lg border border-border bg-surface p-1 shadow-lg ${
+              closing ? "animate-scale-out" : "animate-scale-in"
+            }`}
           >
             {MEMBERS.map((member) => {
               const isSelected = value.includes(member.name);
@@ -151,16 +167,25 @@ export function AddProjectModal({
   );
   const [saving, setSaving] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [closing, setClosing] = useState(false);
+
+  const handleClose = () => setClosing(true);
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = setTimeout(() => onClose(), 150);
+    return () => clearTimeout(timer);
+  }, [closing, onClose]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        handleClose();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -220,17 +245,17 @@ export function AddProjectModal({
       aria-label="Add project"
     >
       <div
-        className="fixed inset-0 bg-black/30"
-        onClick={onClose}
+        className={`fixed inset-0 bg-black/30 ${closing ? "animate-fade-out" : "animate-fade-in"}`}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
-      <div className="relative z-10 flex max-h-full w-full max-w-lg flex-col rounded-xl border border-border bg-surface shadow-xl">
+      <div className={`relative z-10 flex max-h-full w-full max-w-lg flex-col rounded-xl border border-border bg-surface shadow-xl ${closing ? "animate-scale-out" : "animate-scale-in"}`}>
         <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4">
           <h2 className="text-base font-semibold text-foreground">Add Project</h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close"
             className="rounded-md p-1 text-foreground-faint hover:bg-surface-subtle hover:text-foreground-muted"
           >
@@ -317,7 +342,7 @@ export function AddProjectModal({
           )}
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={saving}
             className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >

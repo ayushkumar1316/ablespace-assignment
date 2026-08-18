@@ -78,17 +78,17 @@ export function TaskCard({
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <h4 className="text-sm font-medium text-foreground leading-snug">
+          <h4 className="text-sm font-medium text-foreground leading-snug" title={task.title}>
             {task.title}
           </h4>
           {fields.priority && <PriorityBadge priority={task.priority} />}
         </div>
 
-        <p className="mt-1 text-xs text-foreground-subtle line-clamp-2">{task.description}</p>
+        <p className="mt-1 text-xs text-foreground-subtle line-clamp-2 transition-colors group-hover:text-foreground-muted" title={task.description}>{task.description}</p>
 
         <div className="mt-3 flex items-center gap-2">
           {fields.tags && task.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 transition-opacity group-hover:opacity-100 opacity-80">
               {task.tags.map((tag) => (
                 <span
                   key={tag}
@@ -100,9 +100,9 @@ export function TaskCard({
             </div>
           )}
 
-          <div className="ml-auto flex items-center gap-2 shrink-0">
+          <div className="ml-auto flex items-center gap-2 shrink-0 transition-opacity group-hover:opacity-100 opacity-80">
             {fields.dueDate && (
-              <span className="inline-flex items-center gap-1 text-[11px] text-foreground-subtle">
+              <span className="inline-flex items-center gap-1 text-[11px] text-foreground-subtle group-hover:text-foreground-muted transition-colors">
                 <CalendarIcon />
                 {formatDate(task.dueDate)}
               </span>

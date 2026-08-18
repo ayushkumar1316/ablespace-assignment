@@ -74,3 +74,35 @@ export function SkeletonProjectList() {
     </div>
   );
 }
+
+export function SkeletonTaskDetail() {
+  return (
+    <div className="flex h-full flex-col animate-fade-in">
+      <div className="flex-1 overflow-y-auto p-1">
+        <div className="mb-4 skeleton h-4 w-24 rounded" />
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0 space-y-8">
+            <div className="skeleton h-8 w-2/3 rounded" />
+            <div className="space-y-2">
+              <div className="skeleton h-4 w-20 rounded" />
+              <div className="skeleton h-20 w-full rounded-lg" />
+            </div>
+            <div className="space-y-2">
+              <div className="skeleton h-4 w-28 rounded" />
+              <div className="skeleton h-5 w-full rounded" />
+              <div className="skeleton h-5 w-4/5 rounded" />
+            </div>
+          </div>
+          <div className="w-full shrink-0 space-y-3 lg:w-72">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="rounded-lg border border-border bg-surface p-3">
+                <div className="skeleton h-3 w-16 rounded mb-2" />
+                <div className="skeleton h-8 w-full rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

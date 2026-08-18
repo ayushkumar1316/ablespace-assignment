@@ -61,16 +61,25 @@ export function AddTaskModal({
   );
   const [saving, setSaving] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [closing, setClosing] = useState(false);
+
+  const handleClose = () => setClosing(true);
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = setTimeout(() => onClose(), 150);
+    return () => clearTimeout(timer);
+  }, [closing, onClose]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        handleClose();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -141,17 +150,17 @@ export function AddTaskModal({
       aria-label="Add task"
     >
       <div
-        className="fixed inset-0 bg-black/30"
-        onClick={onClose}
+        className={`fixed inset-0 bg-black/30 ${closing ? "animate-fade-out" : "animate-fade-in"}`}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
-      <div className="relative z-10 flex max-h-full w-full max-w-lg flex-col rounded-xl border border-border bg-surface shadow-xl">
+      <div className={`relative z-10 flex max-h-full w-full max-w-lg flex-col rounded-xl border border-border bg-surface shadow-xl ${closing ? "animate-scale-out" : "animate-scale-in"}`}>
         <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4">
           <h2 className="text-base font-semibold text-foreground">Add Task</h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close"
             className="rounded-md p-1 text-foreground-faint hover:bg-surface-subtle hover:text-foreground-muted"
           >
@@ -283,7 +292,7 @@ export function AddTaskModal({
           )}
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground-secondary hover:bg-surface-muted transition-colors"
           >
             Cancel

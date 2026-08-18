@@ -231,10 +231,23 @@ export function TaskWorkspace() {
   };
 
   const handleDeleteTask = async (taskId: string) => {
+    const deletedTask = tasks.find((t) => t.id === taskId);
     await deleteTask(taskId);
     setTasks((prev) => prev.filter((item) => item.id !== taskId));
     setSelectedTaskId(null);
-    showToast("success", "Task deleted");
+    showToast(
+      "success",
+      "Task deleted",
+      deletedTask
+        ? {
+            label: "Undo",
+            onClick: () => {
+              setTasks((prev) => [...prev, deletedTask]);
+              showToast("success", "Task restored");
+            },
+          }
+        : undefined
+    );
   };
 
   const handleReorderTask = async (
@@ -259,7 +272,7 @@ export function TaskWorkspace() {
   return (
     <div className="h-full flex flex-col">
       {selectedTask ? (
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden animate-fade-in">
           <div className="h-full px-1">
             <TaskDetail
               task={selectedTask}
@@ -331,19 +344,23 @@ export function TaskWorkspace() {
                   )
                 }
               />
-            ) : view === "board" ? (
-              <KanbanBoard
-                tasks={filteredTasks}
-                fields={fields}
-                onSelect={setSelectedTaskId}
-                onReorder={handleReorderTask}
-              />
             ) : (
-              <TaskList
-                tasks={filteredTasks}
-                fields={fields}
-                onSelect={setSelectedTaskId}
-              />
+              <div key={view} className="animate-fade-in">
+                {view === "board" ? (
+                  <KanbanBoard
+                    tasks={filteredTasks}
+                    fields={fields}
+                    onSelect={setSelectedTaskId}
+                    onReorder={handleReorderTask}
+                  />
+                ) : (
+                  <TaskList
+                    tasks={filteredTasks}
+                    fields={fields}
+                    onSelect={setSelectedTaskId}
+                  />
+                )}
+              </div>
             )}
           </div>
         </>

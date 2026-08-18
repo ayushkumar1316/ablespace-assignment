@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface SelectOption {
   value: string;
@@ -47,20 +47,44 @@ export function SelectMenu({
   renderOption?: (option: SelectOption) => React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [flip, setFlip] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const selected = options.find((option) => option.value === value);
 
   const toggle = () => {
-    if (!open && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const estimatedHeight = options.length * 32 + 8;
-      setFlip(
-        rect.bottom + 6 + estimatedHeight > window.innerHeight &&
-          rect.top - 6 - estimatedHeight > 0
-      );
+    if (open) {
+      handleClose();
+    } else {
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        const estimatedHeight = options.length * 32 + 8;
+        setFlip(
+          rect.bottom + 6 + estimatedHeight > window.innerHeight &&
+            rect.top - 6 - estimatedHeight > 0
+        );
+      }
+      setOpen(true);
+      setClosing(false);
     }
-    setOpen((prev) => !prev);
+  };
+
+  const handleClose = () => {
+    setClosing(true);
+  };
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [closing]);
+
+  const handleSelect = (optionValue: string) => {
+    onChange(optionValue);
+    handleClose();
   };
 
   return (
@@ -85,14 +109,14 @@ export function SelectMenu({
         <>
           <div
             className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             aria-hidden="true"
           />
           <div
             role="listbox"
-            className={`absolute left-0 right-0 z-30 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg animate-slide-up ${
-              flip ? "bottom-full mb-1.5" : "top-full mt-1.5"
-            }`}
+            className={`absolute left-0 right-0 z-30 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg ${
+              closing ? "animate-scale-out" : "animate-scale-in"
+            } ${flip ? "bottom-full mb-1.5" : "top-full mt-1.5"}`}
           >
             {options.map((option) => {
               const isSelected = option.value === value;
@@ -102,10 +126,7 @@ export function SelectMenu({
                   type="button"
                   role="option"
                   aria-selected={isSelected}
-                  onClick={() => {
-                    onChange(option.value);
-                    setOpen(false);
-                  }}
+                  onClick={() => handleSelect(option.value)}
                   className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-foreground-secondary hover:bg-surface-muted"
                 >
                   <span className="flex-1 truncate">
