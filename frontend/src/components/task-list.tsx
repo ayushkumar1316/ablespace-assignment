@@ -104,7 +104,7 @@ export function TaskList({
                             onSelect(task.id);
                           }
                         }}
-                        className="border-t border-border-subtle hover:bg-surface-muted transition-colors cursor-pointer"
+                        className="border-t border-border-subtle hover:bg-surface-muted transition-all duration-150 cursor-pointer hover:translate-x-0.5"
                       >
                         <td className="px-3 py-2.5">
                           <DragHandle />

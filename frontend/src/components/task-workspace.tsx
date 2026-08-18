@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 
 import { STATUSES } from "../data/tasks";
 import type { FieldKey, Task, TaskStatus } from "../data/tasks";
 import { createTask, deleteTask, fetchTasks, updateTask } from "../lib/api";
+import { showToast } from "./toast";
 import {
   DEFAULT_TASK_VIEW_PREFERENCES,
   loadTaskViewPreferences,
@@ -17,6 +18,7 @@ import { TaskList } from "./task-list";
 import { TaskDetail } from "./task-detail";
 import { AddTaskModal } from "./add-task-modal";
 import { EmptyState } from "./empty-state";
+import { SkeletonKanban, SkeletonTable } from "./skeleton";
 
 function InboxIcon() {
   return (
@@ -59,20 +61,6 @@ function ErrorIcon() {
     >
       <path d="M12 3L2 21h20L12 3z" strokeWidth="2" strokeLinejoin="round" />
       <path d="M12 10v4M12 17h.01" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function LoadingIcon() {
-  return (
-    <svg
-      className="w-5 h-5 animate-spin"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="9" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 80" />
     </svg>
   );
 }
@@ -231,6 +219,7 @@ export function TaskWorkspace() {
     const created = await createTask(input);
     setTasks((prev) => [...prev, created]);
     setIsAddTaskOpen(false);
+    showToast("success", "Task created");
   };
 
   const handleSaveTask = async (changes: Partial<Omit<Task, "id">>) => {
@@ -238,12 +227,14 @@ export function TaskWorkspace() {
     setTasks((prev) =>
       prev.map((item) => (item.id === updated.id ? updated : item))
     );
+    showToast("success", "Task updated");
   };
 
   const handleDeleteTask = async (taskId: string) => {
     await deleteTask(taskId);
     setTasks((prev) => prev.filter((item) => item.id !== taskId));
     setSelectedTaskId(null);
+    showToast("success", "Task deleted");
   };
 
   const handleReorderTask = async (
@@ -292,11 +283,7 @@ export function TaskWorkspace() {
 
           <div className="flex-1 overflow-hidden pt-4">
             {loadState === "loading" ? (
-              <EmptyState
-                icon={<LoadingIcon />}
-                title="Loading tasks…"
-                description="Fetching your tasks from the server."
-              />
+              view === "board" ? <SkeletonKanban /> : <SkeletonTable />
             ) : loadState === "error" ? (
               <EmptyState
                 icon={<ErrorIcon />}

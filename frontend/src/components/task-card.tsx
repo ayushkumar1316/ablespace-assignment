@@ -62,12 +62,12 @@ export function TaskCard({
               }
             }
       }
-      className={`group bg-surface rounded-lg border border-border shadow-sm transition-all p-3 flex gap-2 ${
+      className={`group bg-surface rounded-lg border border-border shadow-sm transition-all duration-200 ease-out p-3 flex gap-2 ${
         isGhost
           ? "w-72 rotate-2 shadow-2xl ring-2 ring-accent/50 border-accent/40"
           : dragging
             ? "opacity-40 ring-2 ring-accent/60 border-accent/50"
-            : "hover:shadow-md hover:border-border-strong cursor-pointer"
+            : "hover:shadow-lg hover:border-border-strong hover:-translate-y-0.5 cursor-pointer"
       }`}
     >
       <DragHandle

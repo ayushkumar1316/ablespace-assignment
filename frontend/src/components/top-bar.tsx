@@ -75,11 +75,11 @@ export function TopBar({
       <div className="flex items-center gap-3 sm:gap-4">
         <h1 className="text-lg font-semibold text-foreground">Tasks</h1>
 
-        <div className="flex items-center gap-1 rounded-lg bg-surface-subtle p-0.5">
+        <div className="flex items-center gap-1 rounded-lg bg-surface-subtle p-0.5 transition-colors">
           <button
             type="button"
             onClick={() => setSelectedView("board")}
-            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200 ease-out ${
               selectedView === "board"
                 ? "bg-accent text-white shadow-sm"
                 : "text-foreground-subtle hover:text-foreground-secondary"
@@ -91,7 +91,7 @@ export function TopBar({
           <button
             type="button"
             onClick={() => setSelectedView("list")}
-            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200 ease-out ${
               selectedView === "list"
                 ? "bg-accent text-white shadow-sm"
                 : "text-foreground-subtle hover:text-foreground-secondary"
@@ -122,13 +122,13 @@ export function TopBar({
         <button
           type="button"
           onClick={onAddTask}
-          className="rounded-md px-3 py-1.5 text-sm font-medium bg-surface text-foreground-secondary border border-border hover:bg-surface-muted transition-colors"
+          className="rounded-md px-3 py-1.5 text-sm font-medium bg-surface text-foreground-secondary border border-border hover:bg-surface-muted transition-colors btn-press"
         >
           Add Task
         </button>
         <button
           type="button"
-          className="rounded-md px-3 py-1.5 text-sm font-medium bg-accent text-white hover:bg-accent-strong transition-colors"
+          className="rounded-md px-3 py-1.5 text-sm font-medium bg-accent text-white hover:bg-accent-strong transition-colors btn-press"
         >
           Add Project
         </button>

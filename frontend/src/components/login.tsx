@@ -19,8 +19,8 @@ export function Login({ onLogin }: { onLogin: () => Promise<void> }) {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="w-full max-w-md rounded-2xl bg-surface shadow-lg p-6 sm:p-8 flex flex-col items-center gap-6">
-        <div className="w-14 h-14 rounded-2xl bg-surface-subtle flex items-center justify-center mb-6">
+      <div className="w-full max-w-md rounded-2xl bg-surface shadow-lg p-6 sm:p-8 flex flex-col items-center gap-6 animate-[fadeIn_0.5s_ease-out]">
+        <div className="w-14 h-14 rounded-2xl bg-surface-subtle flex items-center justify-center mb-6 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]">
           <div className="w-7 h-7 bg-surface-strong rounded-lg text-foreground-subtle flex items-center justify-center text-xs font-bold">
             AS
           </div>
@@ -36,7 +36,7 @@ export function Login({ onLogin }: { onLogin: () => Promise<void> }) {
           <button
             onClick={handleGuest}
             disabled={loading}
-            className="w-full rounded-md px-4 py-2.5 bg-surface-inverse text-on-inverse text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
+            className="w-full rounded-md px-4 py-2.5 bg-surface-inverse text-on-inverse text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50 btn-press"
           >
             {loading ? "Signing in..." : "Continue as Guest"}
           </button>

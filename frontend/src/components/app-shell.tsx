@@ -10,6 +10,7 @@ import { COLOR_MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "../data/preferences";
 import type { ColorMode, Section, ThemeMode } from "../data/preferences";
 import { fetchPreferences, getGuestToken, hasGuestToken, updatePreferences } from "../lib/api";
 import { loadProfile } from "../lib/user-profile";
+import { ToastContainer } from "./toast";
 
 const COLOR_MODES: ColorMode[] = [
   "amber",
@@ -20,7 +21,7 @@ const COLOR_MODES: ColorMode[] = [
   "black",
 ];
 
-function MenuIcon() {
+function MenuIcon({ open }: { open: boolean }) {
   return (
     <svg
       className="w-5 h-5"
@@ -29,7 +30,24 @@ function MenuIcon() {
       viewBox="0 0 24 24"
       aria-hidden="true"
     >
-      <path d="M4 7h16M4 12h16M4 17h16" strokeWidth="2" strokeLinecap="round" />
+      <path
+        className={`transition-all duration-300 ease-out ${open ? "translate-y-0 rotate-45" : "-translate-y-1.5"}`}
+        d={open ? "M6 6l12 12" : "M4 7h16"}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        className={`transition-all duration-300 ease-out ${open ? "opacity-0 scale-0" : "opacity-100 scale-100"}`}
+        d="M4 12h16"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        className={`transition-all duration-300 ease-out ${open ? "translate-y-0 -rotate-45" : "translate-y-1.5"}`}
+        d={open ? "M18 6L6 18" : "M4 17h16"}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -183,19 +201,22 @@ export function AppShell({
             aria-label="Open sidebar"
             className="-ml-1 rounded-md p-1.5 text-foreground-muted hover:bg-surface-subtle hover:text-foreground transition-colors"
           >
-            <MenuIcon />
+            <MenuIcon open={sidebarOpen} />
           </button>
           <span className="text-base font-semibold text-foreground">
             AbleSpace
           </span>
           <span className="w-6" aria-hidden="true" />
         </div>
-        <div className="flex-1 min-h-0 p-3 md:p-6">
-          {section === "tasks" && children}
-          {section === "projects" && <ProjectsWorkspace />}
-          {section === "settings" && <ProfileSettings />}
+        <div className="flex-1 min-h-0 p-3 md:p-6" key={section}>
+          <div className="animate-fade-in h-full">
+            {section === "tasks" && children}
+            {section === "projects" && <ProjectsWorkspace />}
+            {section === "settings" && <ProfileSettings />}
+          </div>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }

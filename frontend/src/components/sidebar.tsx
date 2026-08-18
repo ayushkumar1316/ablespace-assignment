@@ -135,14 +135,17 @@ export function Sidebar({
           type="button"
           onClick={() => handleNavigate(item.key)}
           aria-current={section === item.key ? "page" : undefined}
-          className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+          className={`relative flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200 ease-out ${
             index > 0 ? "mt-1 " : ""
           }${
             section === item.key
-              ? "bg-accent-soft text-accent-strong font-medium"
-              : "text-foreground-muted hover:bg-surface-subtle hover:text-foreground"
+              ? "bg-accent-soft text-accent-strong font-medium shadow-sm"
+              : "text-foreground-muted hover:bg-surface-subtle hover:text-foreground hover:translate-x-0.5"
           }`}
         >
+          {section === item.key && (
+            <span className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full bg-accent transition-all duration-300 ease-out" />
+          )}
           {item.icon}
           {!isMinimized && <span className="text-sm">{item.label}</span>}
         </button>

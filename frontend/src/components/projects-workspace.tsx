@@ -15,6 +15,7 @@ import type {
 import { formatDate } from "../data/tasks";
 import type { Task } from "../data/tasks";
 import { createProject, fetchProjects, fetchTasks } from "../lib/api";
+import { showToast } from "./toast";
 import {
   DEFAULT_PROJECT_VIEW_PREFERENCES,
   loadProjectViewPreferences,
@@ -28,6 +29,7 @@ import { DisplayMenu } from "./display-menu";
 import { EmptyState } from "./empty-state";
 import { ProjectDetail } from "./project-detail";
 import { TaskDetail } from "./task-detail";
+import { SkeletonProjectList } from "./skeleton";
 
 function SearchIcon() {
   return (
@@ -85,20 +87,6 @@ function ErrorIcon() {
     >
       <path d="M12 3L2 21h20L12 3z" strokeWidth="2" strokeLinejoin="round" />
       <path d="M12 10v4M12 17h.01" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function LoadingIcon() {
-  return (
-    <svg
-      className="w-5 h-5 animate-spin"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="9" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 80" />
     </svg>
   );
 }
@@ -216,6 +204,7 @@ export function ProjectsWorkspace() {
     const created = await createProject(input);
     setProjects((prev) => [...prev, created]);
     setIsAddProjectOpen(false);
+    showToast("success", "Project created");
   };
 
   if (selectedTask) {
@@ -267,7 +256,7 @@ export function ProjectsWorkspace() {
           <button
             type="button"
             onClick={() => setIsAddProjectOpen(true)}
-            className="rounded-md px-3 py-1.5 text-sm font-medium bg-accent text-white hover:bg-accent-strong transition-colors"
+            className="rounded-md px-3 py-1.5 text-sm font-medium bg-accent text-white hover:bg-accent-strong transition-colors btn-press"
           >
             Add Project
           </button>
@@ -276,7 +265,7 @@ export function ProjectsWorkspace() {
 
       <div className="flex-1 overflow-hidden pt-4">
         {loadState === "loading" ? (
-          <EmptyState icon={<LoadingIcon />} title="Loading projects…" />
+          <SkeletonProjectList />
         ) : loadState === "error" ? (
           <EmptyState
             icon={<ErrorIcon />}

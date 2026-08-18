@@ -221,7 +221,7 @@ export function KanbanBoard({
           >
             <div className="flex items-center justify-between px-3 py-2.5">
               <h3 className="text-sm font-semibold text-foreground-secondary">{label}</h3>
-              <span className="text-xs text-foreground-subtle">{columnTasks.length}</span>
+              <span className="text-xs font-medium text-foreground-faint bg-surface px-2 py-0.5 rounded-full border border-border-subtle">{columnTasks.length}</span>
             </div>
             <div className="flex-1 px-2 pb-2 space-y-2 overflow-y-auto">
               {isDropColumn && dropTarget.index === 0 && <DropIndicator />}

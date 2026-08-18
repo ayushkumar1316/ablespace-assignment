@@ -90,7 +90,7 @@ export function SelectMenu({
           />
           <div
             role="listbox"
-            className={`absolute left-0 right-0 z-30 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg ${
+            className={`absolute left-0 right-0 z-30 overflow-hidden rounded-lg border border-border bg-surface p-1 shadow-lg animate-slide-up ${
               flip ? "bottom-full mb-1.5" : "top-full mt-1.5"
             }`}
           >
